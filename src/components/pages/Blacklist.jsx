@@ -7,7 +7,6 @@ import Error from "@/components/ui/Error";
 import Empty from "@/components/ui/Empty";
 import ApperIcon from "@/components/ApperIcon";
 import { blacklistService } from "@/services/api/blacklistService";
-
 const Blacklist = () => {
   const [blacklist, setBlacklist] = useState([]);
   const [filteredBlacklist, setFilteredBlacklist] = useState([]);
@@ -46,15 +45,27 @@ const Blacklist = () => {
     }
   }, [searchTerm, blacklist]);
 
+const handleMoveToMainList = async (id) => {
+    if (!window.confirm("Are you sure you want to move this back to the main list?")) return;
+
+    try {
+      await blacklistService.moveToMainList(id);
+      setBlacklist(prev => prev.filter(item => item.Id !== id));
+      toast.success("Model moved back to main list successfully!");
+    } catch (err) {
+      toast.error("Failed to move model to main list");
+    }
+  };
+
   const handleRemoveFromBlacklist = async (id) => {
-    if (!window.confirm("Are you sure you want to remove this from blacklist?")) return;
+    if (!window.confirm("Are you sure you want to permanently delete this model?")) return;
 
     try {
       await blacklistService.delete(id);
       setBlacklist(prev => prev.filter(item => item.Id !== id));
-      toast.success("Removed from blacklist successfully!");
+      toast.success("Model permanently deleted!");
     } catch (err) {
-      toast.error("Failed to remove from blacklist");
+      toast.error("Failed to delete model");
     }
   };
 
@@ -155,16 +166,27 @@ const Blacklist = () => {
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       {new Date(item.dateAdded).toLocaleDateString()}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        icon="Trash2"
-                        onClick={() => handleRemoveFromBlacklist(item.Id)}
-                        className="text-red-600 hover:text-red-700"
-                      >
-                        Remove
-                      </Button>
+<td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                      <div className="flex space-x-2">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          icon="RotateCcw"
+                          onClick={() => handleMoveToMainList(item.Id)}
+                          className="text-green-600 hover:text-green-700"
+                        >
+                          Move to Main List
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          icon="Trash2"
+                          onClick={() => handleRemoveFromBlacklist(item.Id)}
+                          className="text-red-600 hover:text-red-700"
+                        >
+                          Delete Permanently
+                        </Button>
+                      </div>
                     </td>
                   </tr>
                 ))}

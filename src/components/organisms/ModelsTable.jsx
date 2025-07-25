@@ -3,7 +3,7 @@ import { format } from "date-fns";
 import ApperIcon from "@/components/ApperIcon";
 import Button from "@/components/atoms/Button";
 
-const ModelsTable = ({ models, onEdit, onDelete }) => {
+const ModelsTable = ({ models, onEdit, onDelete, onBlacklist }) => {
   const getPlatformBadgeColor = (platform) => {
     const colors = {
       Instagram: "bg-pink-100 text-pink-800 border-pink-200",
@@ -105,13 +105,20 @@ const ModelsTable = ({ models, onEdit, onDelete }) => {
                   </div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                  <div className="flex space-x-2">
+<div className="flex space-x-2">
                     <Button
                       variant="ghost"
                       size="sm"
                       icon="Edit"
                       onClick={() => onEdit(model)}
                       className="text-primary-600 hover:text-primary-700"
+                    />
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      icon="UserX"
+                      onClick={() => onBlacklist(model.Id)}
+                      className="text-orange-600 hover:text-orange-700"
                     />
                     <Button
                       variant="ghost"

@@ -68,6 +68,32 @@ class ModelService {
       platformBreakdown
     };
   }
+async moveToBlacklist(id) {
+    await this.delay();
+    
+    // Import blacklistService here to avoid circular dependency
+    const { blacklistService } = await import("@/services/api/blacklistService");
+    
+    const model = this.models.find(m => m.Id === parseInt(id));
+    if (!model) throw new Error("Model not found");
+    
+    // Convert model to blacklist format
+    const blacklistData = {
+      link: model.link,
+      platform: model.platform,
+      reason: "Moved from models",
+      originalDateAdded: model.dateAdded
+    };
+    
+    // Add to blacklist
+    await blacklistService.create(blacklistData);
+    
+    // Remove from models
+    const index = this.models.findIndex(m => m.Id === parseInt(id));
+    this.models.splice(index, 1);
+    
+    return true;
+  }
 
   delay(ms = 300) {
     return new Promise(resolve => setTimeout(resolve, ms));

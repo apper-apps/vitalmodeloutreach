@@ -15,7 +15,7 @@ class BlacklistService {
     return this.blacklist.find(item => item.Id === parseInt(id));
   }
 
-  async create(data) {
+async create(data) {
     await this.delay();
     
     const newItem = {
@@ -26,6 +26,33 @@ class BlacklistService {
     
     this.blacklist.unshift(newItem);
     return { ...newItem };
+  }
+
+  async moveToMainList(id) {
+    await this.delay();
+    
+    // Import modelService here to avoid circular dependency
+    const { modelService } = await import("@/services/api/modelService");
+    
+    const blacklistItem = this.blacklist.find(item => item.Id === parseInt(id));
+    if (!blacklistItem) throw new Error("Blacklist item not found");
+    
+    // Convert blacklist item back to model format
+    const modelData = {
+      link: blacklistItem.link,
+      platform: blacklistItem.platform,
+      dateAdded: blacklistItem.originalDateAdded || blacklistItem.dateAdded,
+      status: "active"
+    };
+    
+    // Add back to models
+    await modelService.create(modelData);
+    
+    // Remove from blacklist
+    const index = this.blacklist.findIndex(item => item.Id === parseInt(id));
+    this.blacklist.splice(index, 1);
+    
+    return true;
   }
 
   async update(id, data) {

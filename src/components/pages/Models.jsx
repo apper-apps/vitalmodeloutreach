@@ -9,7 +9,7 @@ import Loading from "@/components/ui/Loading";
 import Error from "@/components/ui/Error";
 import Empty from "@/components/ui/Empty";
 import { modelService } from "@/services/api/modelService";
-
+import { blacklistService } from "@/services/api/blacklistService";
 const Models = () => {
   const [models, setModels] = useState([]);
   const [filteredModels, setFilteredModels] = useState([]);
@@ -84,9 +84,20 @@ const Models = () => {
       toast.error("Failed to delete model");
     }
   };
-
-  const handleEdit = (model) => {
+const handleEdit = (model) => {
     setEditingModel(model);
+  };
+
+  const handleBlacklistModel = async (id) => {
+    if (!window.confirm("Are you sure you want to move this model to blacklist?")) return;
+
+    try {
+      await modelService.moveToBlacklist(id);
+      setModels(prev => prev.filter(model => model.Id !== id));
+      toast.success("Model moved to blacklist successfully!");
+    } catch (err) {
+      toast.error("Failed to move model to blacklist");
+    }
   };
 
   if (loading) return <Loading />;
@@ -138,10 +149,11 @@ const Models = () => {
           />
         )
       ) : (
-        <ModelsTable
+<ModelsTable
           models={filteredModels}
           onEdit={handleEdit}
           onDelete={handleDeleteModel}
+          onBlacklist={handleBlacklistModel}
         />
       )}
 
