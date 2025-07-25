@@ -3,16 +3,22 @@ import { format } from "date-fns";
 import ApperIcon from "@/components/ApperIcon";
 import Button from "@/components/atoms/Button";
 import Select from "@/components/atoms/Select";
-const ModelsTable = ({ models, onEdit, onDelete, onBlacklist, accounts = [], onFollowedByChange, onDMSentChange, onDMSentDateChange }) => {
+const ModelsTable = ({ models, onEdit, onDelete, onBlacklist, accounts = [], onFollowedByChange, onDMSentChange, onDMSentDateChange, platforms = [] }) => {
   const getPlatformBadgeColor = (platform) => {
-    const colors = {
-      Instagram: "bg-pink-100 text-pink-800 border-pink-200",
-      TikTok: "bg-purple-100 text-purple-800 border-purple-200",
-      OnlyFans: "bg-blue-100 text-blue-800 border-blue-200",
-      Twitter: "bg-sky-100 text-sky-800 border-sky-200",
-      Other: "bg-gray-100 text-gray-800 border-gray-200"
+    const platformConfig = platforms.find(p => p.name === platform);
+    if (platformConfig) {
+      return {
+        backgroundColor: platformConfig.pillBackgroundColor,
+        color: platformConfig.pillTextColor,
+        borderColor: platformConfig.pillTextColor + '20'
+      };
+    }
+    // Fallback colors for unknown platforms
+    return {
+      backgroundColor: "#f3f4f6",
+      color: "#374151",
+      borderColor: "#d1d5db"
     };
-    return colors[platform] || colors.Other;
   };
 
   const formatDate = (dateString) => {

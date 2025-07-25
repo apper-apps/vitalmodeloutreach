@@ -5,5 +5,42 @@
   "emailNotifications": true,
   "followReminders": true,
   "dmReminders": false,
-  "totalModels": 5
+  "totalModels": 5,
+  "platforms": [
+    {
+      "Id": 1,
+      "name": "Instagram",
+      "domain": "instagram.com",
+      "pillBackgroundColor": "#fdf2f8",
+      "pillTextColor": "#be185d"
+    },
+    {
+      "Id": 2,
+      "name": "OnlyFans",
+      "domain": "onlyfans.com",
+      "pillBackgroundColor": "#dbeafe",
+      "pillTextColor": "#1d4ed8"
+    },
+    {
+      "Id": 3,
+      "name": "Fansly",
+      "domain": "fansly.com",
+      "pillBackgroundColor": "#f3e8ff",
+      "pillTextColor": "#7c3aed"
+    },
+    {
+      "Id": 4,
+      "name": "TikTok",
+      "domain": "tiktok.com",
+      "pillBackgroundColor": "#f3e8ff",
+      "pillTextColor": "#7c3aed"
+    },
+    {
+      "Id": 5,
+      "name": "Twitter",
+      "domain": "twitter.com",
+      "pillBackgroundColor": "#e0f2fe",
+      "pillTextColor": "#0284c7"
+    }
+  ]
 }
