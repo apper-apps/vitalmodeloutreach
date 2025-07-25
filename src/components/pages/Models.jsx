@@ -126,7 +126,41 @@ toast.success("Model updated successfully!");
     } catch (err) {
       toast.error("Failed to delete model");
     }
+};
+
+  const handleDMSentChange = async (modelId, dmSent) => {
+    try {
+      const updateData = { 
+        dmSent,
+        dmSentDate: dmSent ? new Date().toISOString() : null
+      };
+      
+      await modelService.update(modelId, updateData);
+      setModels(prev => prev.map(model => 
+        model.Id === modelId ? { ...model, ...updateData } : model
+      ));
+      toast.success(dmSent ? "DM marked as sent!" : "DM status updated!");
+    } catch (err) {
+      toast.error("Failed to update DM status");
+    }
   };
+
+  const handleDMSentDateChange = async (modelId, dmSentDate) => {
+    try {
+      const updateData = { 
+        dmSentDate: dmSentDate ? new Date(dmSentDate).toISOString() : null
+      };
+      
+      await modelService.update(modelId, updateData);
+      setModels(prev => prev.map(model => 
+        model.Id === modelId ? { ...model, ...updateData } : model
+      ));
+      toast.success("DM date updated!");
+    } catch (err) {
+      toast.error("Failed to update DM date");
+    }
+  };
+
 const handleEdit = (model) => {
     setEditingModel(model);
   };
@@ -199,6 +233,8 @@ const handleEdit = (model) => {
           onBlacklist={handleBlacklistModel}
           accounts={accounts}
           onFollowedByChange={handleFollowedByChange}
+          onDMSentChange={handleDMSentChange}
+          onDMSentDateChange={handleDMSentDateChange}
         />
       )}
 

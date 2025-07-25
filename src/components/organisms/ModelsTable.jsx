@@ -3,7 +3,7 @@ import { format } from "date-fns";
 import ApperIcon from "@/components/ApperIcon";
 import Button from "@/components/atoms/Button";
 import Select from "@/components/atoms/Select";
-const ModelsTable = ({ models, onEdit, onDelete, onBlacklist, accounts = [], onFollowedByChange }) => {
+const ModelsTable = ({ models, onEdit, onDelete, onBlacklist, accounts = [], onFollowedByChange, onDMSentChange, onDMSentDateChange }) => {
   const getPlatformBadgeColor = (platform) => {
     const colors = {
       Instagram: "bg-pink-100 text-pink-800 border-pink-200",
@@ -41,8 +41,14 @@ const ModelsTable = ({ models, onEdit, onDelete, onBlacklist, accounts = [], onF
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Follow Date
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+<th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 DM Sent
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                DM Sent Date
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Actions
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 DM Date
@@ -93,22 +99,21 @@ const ModelsTable = ({ models, onEdit, onDelete, onBlacklist, accounts = [], onF
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                   {formatDate(model.followDate)}
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <span className={`inline-flex items-center px-2 py-1 text-xs font-medium rounded-full ${
-                    model.dmSent 
-                      ? "bg-green-100 text-green-800 border border-green-200" 
-                      : "bg-gray-100 text-gray-800 border border-gray-200"
-                  }`}>
-                    <ApperIcon 
-                      name={model.dmSent ? "Check" : "X"} 
-                      size={12} 
-                      className="mr-1" 
-                    />
-                    {model.dmSent ? "Yes" : "No"}
-                  </span>
+<td className="px-6 py-4 whitespace-nowrap">
+                  <input
+                    type="checkbox"
+                    checked={model.dmSent || false}
+                    onChange={(e) => onDMSentChange && onDMSentChange(model.Id, e.target.checked)}
+                    className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
+                  />
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                  {formatDate(model.dmSentDate)}
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <input
+                    type="date"
+                    value={model.dmSentDate ? new Date(model.dmSentDate).toISOString().split('T')[0] : ''}
+                    onChange={(e) => onDMSentDateChange && onDMSentDateChange(model.Id, e.target.value)}
+                    className="text-sm border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500"
+                  />
                 </td>
                 <td className="px-6 py-4 text-sm text-gray-900 max-w-[200px]">
                   <div className="truncate" title={model.notes}>
