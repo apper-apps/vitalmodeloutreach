@@ -1,0 +1,9 @@
+{
+  "displayName": "Model Scout",
+  "email": "scout@modeloutreach.com",
+  "defaultPlatform": "Instagram",
+  "emailNotifications": true,
+  "followReminders": true,
+  "dmReminders": false,
+  "totalModels": 5
+}

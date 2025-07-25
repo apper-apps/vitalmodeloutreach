@@ -1,0 +1,62 @@
+[
+  {
+    "Id": 1,
+    "link": "https://instagram.com/model_sarah",
+    "dateAdded": "2024-01-15T10:30:00Z",
+    "platform": "Instagram",
+    "followedBy": "talent_scout_official",
+    "followDate": "2024-01-16T14:20:00Z",
+    "dmSent": true,
+    "dmSentDate": "2024-01-17T09:15:00Z",
+    "notes": "Fashion model, great engagement rate. Interested in collaboration.",
+    "status": "active"
+  },
+  {
+    "Id": 2,
+    "link": "https://tiktok.com/@model_jessica",
+    "dateAdded": "2024-01-14T16:45:00Z",
+    "platform": "TikTok",
+    "followedBy": "agency_account",
+    "followDate": "2024-01-15T11:30:00Z",
+    "dmSent": false,
+    "dmSentDate": null,
+    "notes": "Dance content creator, 500k followers. Very active on platform.",
+    "status": "active"
+  },
+  {
+    "Id": 3,
+    "link": "https://twitter.com/model_alexandra",
+    "dateAdded": "2024-01-13T12:00:00Z",
+    "platform": "Twitter",
+    "followedBy": "scout_mike",
+    "followDate": "2024-01-14T08:45:00Z",
+    "dmSent": true,
+    "dmSentDate": "2024-01-14T15:30:00Z",
+    "notes": "Lifestyle model, good photo quality. Responded positively to initial contact.",
+    "status": "active"
+  },
+  {
+    "Id": 4,
+    "link": "https://instagram.com/model_emma",
+    "dateAdded": "2024-01-12T09:20:00Z",
+    "platform": "Instagram",
+    "followedBy": "talent_scout_official",
+    "followDate": null,
+    "dmSent": false,
+    "dmSentDate": null,
+    "notes": "Fitness model, great aesthetic. Need to follow up soon.",
+    "status": "pending"
+  },
+  {
+    "Id": 5,
+    "link": "https://onlyfans.com/model_victoria",
+    "dateAdded": "2024-01-11T14:15:00Z",
+    "platform": "OnlyFans",
+    "followedBy": "premium_scout",
+    "followDate": "2024-01-12T10:00:00Z",
+    "dmSent": true,
+    "dmSentDate": "2024-01-13T16:45:00Z",
+    "notes": "Adult content creator, professional setup. Interested in mainstream modeling.",
+    "status": "active"
+  }
+]
