@@ -3,7 +3,7 @@ import Input from "@/components/atoms/Input";
 import Select from "@/components/atoms/Select";
 import Textarea from "@/components/atoms/Textarea";
 import Button from "@/components/atoms/Button";
-
+import { settingsService } from "@/services/api/settingsService";
 const AddModelForm = ({ model, onSubmit, onCancel }) => {
   const [formData, setFormData] = useState({
     link: "",
@@ -14,9 +14,37 @@ const AddModelForm = ({ model, onSubmit, onCancel }) => {
     dmSent: false,
     dmSentDate: ""
   });
-
-  const [errors, setErrors] = useState({});
+const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [platforms, setPlatforms] = useState([
+    { value: "", label: "Select Platform" },
+    { value: "Instagram", label: "Instagram" },
+    { value: "TikTok", label: "TikTok" },
+    { value: "OnlyFans", label: "OnlyFans" },
+    { value: "Twitter", label: "Twitter" },
+    { value: "Other", label: "Other" }
+  ]);
+
+useEffect(() => {
+    const loadPlatforms = async () => {
+      try {
+        const settings = await settingsService.get();
+        const platformOptions = [
+          { value: "", label: "Select Platform" },
+          ...settings.platforms.map(platform => ({
+            value: platform.name,
+            label: platform.name
+          })),
+          { value: "Other", label: "Other" }
+        ];
+        setPlatforms(platformOptions);
+      } catch (error) {
+        console.error("Failed to load platforms:", error);
+      }
+    };
+
+    loadPlatforms();
+  }, []);
 
   useEffect(() => {
     if (model) {
@@ -32,15 +60,23 @@ const AddModelForm = ({ model, onSubmit, onCancel }) => {
     }
   }, [model]);
 
-  const platforms = [
-    { value: "", label: "Select Platform" },
-    { value: "Instagram", label: "Instagram" },
-    { value: "TikTok", label: "TikTok" },
-    { value: "OnlyFans", label: "OnlyFans" },
-    { value: "Twitter", label: "Twitter" },
-    { value: "Other", label: "Other" }
-  ];
+const detectPlatformFromUrl = async (url) => {
+    if (!url || !isValidUrl(url)) return "";
 
+    try {
+      const urlObj = new URL(url);
+      const domain = urlObj.hostname.replace('www.', '');
+      
+      const settings = await settingsService.get();
+      const matchedPlatform = settings.platforms.find(platform => 
+        domain.includes(platform.domain.replace('www.', ''))
+      );
+      
+      return matchedPlatform ? matchedPlatform.name : "";
+    } catch (error) {
+      return "";
+    }
+  };
   const validateForm = () => {
     const newErrors = {};
 
@@ -67,11 +103,23 @@ const AddModelForm = ({ model, onSubmit, onCancel }) => {
     }
   };
 
-  const handleChange = (field, value) => {
+const handleChange = async (field, value) => {
     setFormData(prev => ({
       ...prev,
       [field]: value
     }));
+
+    // Auto-detect platform when URL is entered or changed
+    if (field === "link" && value) {
+      const detectedPlatform = await detectPlatformFromUrl(value);
+      if (detectedPlatform) {
+        setFormData(prev => ({
+          ...prev,
+          [field]: value,
+          platform: detectedPlatform
+        }));
+      }
+    }
 
     // Clear error when user starts typing
     if (errors[field]) {
