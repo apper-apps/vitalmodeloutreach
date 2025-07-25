@@ -4,7 +4,7 @@ export default {
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
-  theme: {
+theme: {
     extend: {
       colors: {
         primary: {
@@ -19,6 +19,9 @@ export default {
           800: '#5b21b6',
           900: '#4c1d95',
         },
+        border: '#e5e7eb',
+        background: '#ffffff',
+        foreground: '#0f172a',
       },
       fontFamily: {
         sans: ['Inter', 'system-ui', 'sans-serif'],
