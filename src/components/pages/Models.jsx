@@ -10,16 +10,18 @@ import Error from "@/components/ui/Error";
 import Empty from "@/components/ui/Empty";
 import { modelService } from "@/services/api/modelService";
 import { blacklistService } from "@/services/api/blacklistService";
+import { accountService } from "@/services/api/accountService";
+
 const Models = () => {
-  const [models, setModels] = useState([]);
+const [models, setModels] = useState([]);
   const [filteredModels, setFilteredModels] = useState([]);
+  const [accounts, setAccounts] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [showAddModal, setShowAddModal] = useState(false);
   const [editingModel, setEditingModel] = useState(null);
-
-  const loadModels = async () => {
+const loadModels = async () => {
     try {
       setLoading(true);
       setError("");
@@ -33,10 +35,19 @@ const Models = () => {
     }
   };
 
+  const loadAccounts = async () => {
+    try {
+      const data = await accountService.getAll();
+      setAccounts(data);
+    } catch (err) {
+      console.error("Failed to load accounts:", err);
+    }
+  };
+
   useEffect(() => {
     loadModels();
+    loadAccounts();
   }, []);
-
   useEffect(() => {
     if (!searchTerm) {
       setFilteredModels(models);
@@ -67,12 +78,44 @@ const Models = () => {
       const updatedModel = await modelService.update(editingModel.Id, formData);
       setModels(prev => prev.map(m => m.Id === editingModel.Id ? updatedModel : m));
       setEditingModel(null);
-      toast.success("Model updated successfully!");
+toast.success("Model updated successfully!");
     } catch (err) {
       toast.error("Failed to update model");
     }
   };
 
+  const handleFollowedByChange = async (modelId, accountUsername) => {
+    try {
+      const updateData = {
+        followedBy: accountUsername,
+        followDate: accountUsername ? new Date().toISOString() : null
+      };
+      
+      await modelService.update(modelId, updateData);
+      
+      // Update local state
+      const updatedModels = models.map(model =>
+        model.Id === modelId
+          ? { ...model, ...updateData }
+          : model
+      );
+      setModels(updatedModels);
+      setFilteredModels(updatedModels.filter(model =>
+        model.link.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        model.platform.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (model.followedBy && model.followedBy.toLowerCase().includes(searchTerm.toLowerCase())) ||
+        (model.notes && model.notes.toLowerCase().includes(searchTerm.toLowerCase()))
+      ));
+      
+      if (accountUsername) {
+        toast.success("Account assigned and follow date set!");
+      } else {
+        toast.success("Account assignment cleared!");
+      }
+    } catch (err) {
+      toast.error("Failed to update model");
+    }
+  };
   const handleDeleteModel = async (id) => {
     if (!window.confirm("Are you sure you want to delete this model?")) return;
 
@@ -154,6 +197,8 @@ const handleEdit = (model) => {
           onEdit={handleEdit}
           onDelete={handleDeleteModel}
           onBlacklist={handleBlacklistModel}
+          accounts={accounts}
+          onFollowedByChange={handleFollowedByChange}
         />
       )}
 

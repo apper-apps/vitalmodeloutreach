@@ -2,8 +2,8 @@ import React from "react";
 import { format } from "date-fns";
 import ApperIcon from "@/components/ApperIcon";
 import Button from "@/components/atoms/Button";
-
-const ModelsTable = ({ models, onEdit, onDelete, onBlacklist }) => {
+import Select from "@/components/atoms/Select";
+const ModelsTable = ({ models, onEdit, onDelete, onBlacklist, accounts = [], onFollowedByChange }) => {
   const getPlatformBadgeColor = (platform) => {
     const colors = {
       Instagram: "bg-pink-100 text-pink-800 border-pink-200",
@@ -76,8 +76,19 @@ const ModelsTable = ({ models, onEdit, onDelete, onBlacklist }) => {
                     {model.platform}
                   </span>
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                  {model.followedBy || "-"}
+<td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                  <Select
+                    value={model.followedBy || ""}
+                    onChange={(e) => onFollowedByChange && onFollowedByChange(model.Id, e.target.value)}
+                    className="min-w-[150px]"
+                  >
+                    <option value="">Select Account</option>
+                    {accounts.map((account) => (
+                      <option key={account.Id} value={account.username}>
+                        {account.name} (@{account.username})
+                      </option>
+                    ))}
+                  </Select>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                   {formatDate(model.followDate)}

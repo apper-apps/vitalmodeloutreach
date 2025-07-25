@@ -6,14 +6,19 @@ import Button from "@/components/atoms/Button";
 import Loading from "@/components/ui/Loading";
 import Error from "@/components/ui/Error";
 import ApperIcon from "@/components/ApperIcon";
+import Modal from "@/components/molecules/Modal";
 import { settingsService } from "@/services/api/settingsService";
-
+import { accountService } from "@/services/api/accountService";
 const Settings = () => {
-  const [settings, setSettings] = useState({});
+const [settings, setSettings] = useState({});
+  const [accounts, setAccounts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [saving, setSaving] = useState(false);
-
+  const [showAccountModal, setShowAccountModal] = useState(false);
+  const [editingAccount, setEditingAccount] = useState(null);
+  const [accountForm, setAccountForm] = useState({ name: "", platform: "Instagram", username: "" });
+  const [deleteConfirm, setDeleteConfirm] = useState(null);
   const loadSettings = async () => {
     try {
       setLoading(true);
@@ -25,12 +30,21 @@ const Settings = () => {
     } finally {
       setLoading(false);
     }
+};
+
+  const loadAccounts = async () => {
+    try {
+      const data = await accountService.getAll();
+      setAccounts(data);
+    } catch (err) {
+      console.error("Failed to load accounts:", err);
+    }
   };
 
   useEffect(() => {
     loadSettings();
+    loadAccounts();
   }, []);
-
   const handleSave = async (e) => {
     e.preventDefault();
     
@@ -49,12 +63,62 @@ const Settings = () => {
     setSettings(prev => ({
       ...prev,
       [field]: value
+}));
+  };
+
+  const handleAddAccount = () => {
+    setEditingAccount(null);
+    setAccountForm({ name: "", platform: "Instagram", username: "" });
+    setShowAccountModal(true);
+  };
+
+  const handleEditAccount = (account) => {
+    setEditingAccount(account);
+    setAccountForm({
+      name: account.name,
+      platform: account.platform,
+      username: account.username
+    });
+    setShowAccountModal(true);
+  };
+
+  const handleSaveAccount = async (e) => {
+    e.preventDefault();
+    try {
+      if (editingAccount) {
+        await accountService.update(editingAccount.Id, accountForm);
+        toast.success("Account updated successfully!");
+      } else {
+        await accountService.create(accountForm);
+        toast.success("Account added successfully!");
+      }
+      setShowAccountModal(false);
+      loadAccounts();
+    } catch (err) {
+      toast.error("Failed to save account");
+    }
+  };
+
+  const handleDeleteAccount = async (accountId) => {
+    try {
+      await accountService.delete(accountId);
+      toast.success("Account deleted successfully!");
+      setDeleteConfirm(null);
+      loadAccounts();
+    } catch (err) {
+      toast.error("Failed to delete account");
+    }
+  };
+
+  const handleAccountFormChange = (field, value) => {
+    setAccountForm(prev => ({
+      ...prev,
+      [field]: value
     }));
   };
 
   if (loading) return <Loading type="cards" />;
   if (error) return <Error message={error} onRetry={loadSettings} />;
-
   return (
     <div className="space-y-6">
       <div>
@@ -187,6 +251,75 @@ const Settings = () => {
               Clear All Data
             </Button>
           </div>
+</div>
+
+        {/* My Accounts Section */}
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center">
+              <ApperIcon name="Users" size={20} className="text-primary-600 mr-2" />
+              <h3 className="text-lg font-semibold text-gray-900">My Accounts</h3>
+            </div>
+            <Button
+              onClick={handleAddAccount}
+              size="sm"
+              className="flex items-center gap-2"
+            >
+              <ApperIcon name="Plus" size={16} />
+              Add Account
+            </Button>
+          </div>
+
+          {accounts.length === 0 ? (
+            <div className="text-center py-8 text-gray-500">
+              <ApperIcon name="Users" size={48} className="mx-auto mb-3 text-gray-300" />
+              <p>No accounts added yet</p>
+              <p className="text-sm">Add your first outreach account to get started</p>
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {accounts.map((account) => (
+                <div key={account.Id} className="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-10 h-10 bg-primary-100 rounded-lg flex items-center justify-center">
+                      <ApperIcon name="User" size={20} className="text-primary-600" />
+                    </div>
+                    <div>
+                      <h4 className="font-medium text-gray-900">{account.name}</h4>
+                      <div className="flex items-center space-x-4 text-sm text-gray-500">
+                        <span className="flex items-center">
+                          <ApperIcon name="Globe" size={14} className="mr-1" />
+                          {account.platform}
+                        </span>
+                        <span className="flex items-center">
+                          <ApperIcon name="AtSign" size={14} className="mr-1" />
+                          {account.username}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => handleEditAccount(account)}
+                      className="text-gray-600 hover:text-gray-900"
+                    >
+                      <ApperIcon name="Edit" size={16} />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setDeleteConfirm(account)}
+                      className="text-red-600 hover:text-red-700"
+                    >
+                      <ApperIcon name="Trash2" size={16} />
+                    </Button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
 
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
@@ -208,11 +341,100 @@ const Settings = () => {
               <span>Total Models:</span>
               <span className="font-medium">{settings.totalModels || 0}</span>
             </div>
+            <div className="flex justify-between">
+              <span>Total Accounts:</span>
+              <span className="font-medium">{accounts.length}</span>
+            </div>
           </div>
         </div>
       </div>
+
+      {/* Account Modal */}
+      <Modal
+        isOpen={showAccountModal}
+        onClose={() => setShowAccountModal(false)}
+        title={editingAccount ? "Edit Account" : "Add New Account"}
+      >
+        <form onSubmit={handleSaveAccount} className="space-y-4">
+          <Input
+            label="Account Name"
+            value={accountForm.name}
+            onChange={(e) => handleAccountFormChange("name", e.target.value)}
+            placeholder="e.g., Talent Scout Official"
+            required
+          />
+          
+          <Select
+            label="Platform"
+            value={accountForm.platform}
+            onChange={(e) => handleAccountFormChange("platform", e.target.value)}
+            required
+          >
+            <option value="Instagram">Instagram</option>
+            <option value="TikTok">TikTok</option>
+            <option value="Twitter">Twitter</option>
+            <option value="OnlyFans">OnlyFans</option>
+            <option value="Other">Other</option>
+          </Select>
+          
+          <Input
+            label="Username"
+            value={accountForm.username}
+            onChange={(e) => handleAccountFormChange("username", e.target.value)}
+            placeholder="e.g., talent_scout_official"
+            required
+          />
+          
+          <div className="flex justify-end space-x-3 pt-4">
+            <Button
+              type="button"
+              variant="ghost"
+              onClick={() => setShowAccountModal(false)}
+            >
+              Cancel
+            </Button>
+            <Button type="submit">
+              {editingAccount ? "Update Account" : "Add Account"}
+            </Button>
+          </div>
+        </form>
+      </Modal>
+
+      {/* Delete Confirmation Modal */}
+      <Modal
+        isOpen={!!deleteConfirm}
+        onClose={() => setDeleteConfirm(null)}
+        title="Delete Account"
+      >
+        <div className="space-y-4">
+          <div className="flex items-center space-x-3 p-4 bg-red-50 rounded-lg">
+            <ApperIcon name="AlertTriangle" size={20} className="text-red-600" />
+            <div>
+              <p className="font-medium text-red-900">Are you sure?</p>
+              <p className="text-sm text-red-700">
+                This will permanently delete "{deleteConfirm?.name}" account. This action cannot be undone.
+              </p>
+            </div>
+          </div>
+          
+          <div className="flex justify-end space-x-3">
+            <Button
+              variant="ghost"
+              onClick={() => setDeleteConfirm(null)}
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={() => handleDeleteAccount(deleteConfirm.Id)}
+            >
+              Delete Account
+            </Button>
+          </div>
+        </div>
+      </Modal>
     </div>
-  );
+);
 };
 
 export default Settings;

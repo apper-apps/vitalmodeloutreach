@@ -1,0 +1,30 @@
+[
+  {
+    "Id": 1,
+    "name": "Talent Scout Official",
+    "platform": "Instagram",
+    "username": "talent_scout_official",
+    "createdDate": "2024-01-10T08:00:00Z"
+  },
+  {
+    "Id": 2,
+    "name": "Agency Account", 
+    "platform": "TikTok",
+    "username": "agency_account",
+    "createdDate": "2024-01-11T10:30:00Z"
+  },
+  {
+    "Id": 3,
+    "name": "Scout Mike",
+    "platform": "Twitter", 
+    "username": "scout_mike",
+    "createdDate": "2024-01-12T14:15:00Z"
+  },
+  {
+    "Id": 4,
+    "name": "Premium Scout",
+    "platform": "OnlyFans",
+    "username": "premium_scout", 
+    "createdDate": "2024-01-13T16:45:00Z"
+  }
+]
