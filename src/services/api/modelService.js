@@ -112,6 +112,50 @@ async moveToBlacklist(id) {
     return this.models.find(model => cleanUrl(model.link) === cleanedTarget);
   }
 
+async exportToCsv() {
+    await this.delay();
+    
+    const headers = ['ID', 'Link', 'Platform', 'Date Added', 'Status', 'Follow Date', 'DM Sent', 'Notes'];
+    const csvRows = [headers.join(',')];
+    
+    this.models.forEach(model => {
+      const row = [
+        model.Id,
+        `"${model.link || ''}"`,
+        `"${model.platform || ''}"`,
+        `"${model.dateAdded || ''}"`,
+        `"${model.status || 'active'}"`,
+        `"${model.followDate || ''}"`,
+        `"${model.dmSent ? 'Yes' : 'No'}"`,
+        `"${model.notes || ''}"`
+      ];
+      csvRows.push(row.join(','));
+    });
+    
+    return csvRows.join('\n');
+  }
+
+  async exportToJson() {
+    await this.delay();
+    
+    const exportData = {
+      exportDate: new Date().toISOString(),
+      totalRecords: this.models.length,
+      data: this.models.map(model => ({
+        Id: model.Id,
+        link: model.link,
+        platform: model.platform,
+        dateAdded: model.dateAdded,
+        status: model.status || 'active',
+        followDate: model.followDate || null,
+        dmSent: model.dmSent || false,
+        notes: model.notes || ''
+      }))
+    };
+    
+    return JSON.stringify(exportData, null, 2);
+  }
+
   delay(ms = 300) {
     return new Promise(resolve => setTimeout(resolve, ms));
   }

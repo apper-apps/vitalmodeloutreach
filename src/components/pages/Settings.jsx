@@ -9,6 +9,9 @@ import ApperIcon from "@/components/ApperIcon";
 import Modal from "@/components/molecules/Modal";
 import { settingsService } from "@/services/api/settingsService";
 import { accountService } from "@/services/api/accountService";
+import { modelService } from "@/services/api/modelService";
+import { blacklistService } from "@/services/api/blacklistService";
+
 const Settings = () => {
 const [settings, setSettings] = useState({});
   const [accounts, setAccounts] = useState([]);
@@ -194,6 +197,78 @@ const [settings, setSettings] = useState({});
       ...prev,
       [field]: value
     }));
+};
+
+  const handleExportModelsCSV = async () => {
+    try {
+      const csvData = await modelService.exportToCsv();
+      const blob = new Blob([csvData], { type: 'text/csv' });
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `models-export-${new Date().toISOString().split('T')[0]}.csv`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+      toast.success('Models exported to CSV successfully!');
+    } catch (err) {
+      toast.error('Failed to export models to CSV');
+    }
+  };
+
+  const handleExportModelsJSON = async () => {
+    try {
+      const jsonData = await modelService.exportToJson();
+      const blob = new Blob([jsonData], { type: 'application/json' });
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `models-export-${new Date().toISOString().split('T')[0]}.json`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+      toast.success('Models exported to JSON successfully!');
+    } catch (err) {
+      toast.error('Failed to export models to JSON');
+    }
+  };
+
+  const handleExportBlacklistCSV = async () => {
+    try {
+      const csvData = await blacklistService.exportToCsv();
+      const blob = new Blob([csvData], { type: 'text/csv' });
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `blacklist-export-${new Date().toISOString().split('T')[0]}.csv`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+      toast.success('Blacklist exported to CSV successfully!');
+    } catch (err) {
+      toast.error('Failed to export blacklist to CSV');
+    }
+  };
+
+  const handleExportBlacklistJSON = async () => {
+    try {
+      const jsonData = await blacklistService.exportToJson();
+      const blob = new Blob([jsonData], { type: 'application/json' });
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `blacklist-export-${new Date().toISOString().split('T')[0]}.json`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+      toast.success('Blacklist exported to JSON successfully!');
+    } catch (err) {
+      toast.error('Failed to export blacklist to JSON');
+    }
   };
 
   if (loading) return <Loading type="cards" />;
@@ -304,15 +379,44 @@ const [settings, setSettings] = useState({});
             <ApperIcon name="Database" size={20} className="text-primary-600 mr-2" />
             <h3 className="text-lg font-semibold text-gray-900">Data Management</h3>
           </div>
-          
-          <div className="space-y-4">
-            <Button
-              variant="outline"
-              className="w-full"
-              icon="Download"
-            >
-              Export Data
-            </Button>
+<div className="space-y-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <Button
+                variant="outline"
+                className="w-full"
+                icon="Download"
+                onClick={handleExportModelsCSV}
+              >
+                Export Models to CSV
+              </Button>
+              
+              <Button
+                variant="outline"
+                className="w-full"
+                icon="Download"
+                onClick={handleExportModelsJSON}
+              >
+                Export Models to JSON
+              </Button>
+              
+              <Button
+                variant="outline"
+                className="w-full"
+                icon="Download"
+                onClick={handleExportBlacklistCSV}
+              >
+                Export Blacklist to CSV
+              </Button>
+              
+              <Button
+                variant="outline"
+                className="w-full"
+                icon="Download"
+                onClick={handleExportBlacklistJSON}
+              >
+                Export Blacklist to JSON
+              </Button>
+            </div>
             
             <Button
               variant="outline"

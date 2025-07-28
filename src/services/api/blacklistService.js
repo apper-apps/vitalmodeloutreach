@@ -75,6 +75,46 @@ async create(data) {
     return true;
   }
 
+async exportToCsv() {
+    await this.delay();
+    
+    const headers = ['ID', 'Link', 'Platform', 'Reason', 'Date Added', 'Original Date Added'];
+    const csvRows = [headers.join(',')];
+    
+    this.blacklist.forEach(item => {
+      const row = [
+        item.Id,
+        `"${item.link || ''}"`,
+        `"${item.platform || ''}"`,
+        `"${item.reason || ''}"`,
+        `"${item.dateAdded || ''}"`,
+        `"${item.originalDateAdded || ''}"`
+      ];
+      csvRows.push(row.join(','));
+    });
+    
+    return csvRows.join('\n');
+  }
+
+  async exportToJson() {
+    await this.delay();
+    
+    const exportData = {
+      exportDate: new Date().toISOString(),
+      totalRecords: this.blacklist.length,
+      data: this.blacklist.map(item => ({
+        Id: item.Id,
+        link: item.link,
+        platform: item.platform,
+        reason: item.reason,
+        dateAdded: item.dateAdded,
+        originalDateAdded: item.originalDateAdded || null
+      }))
+    };
+    
+    return JSON.stringify(exportData, null, 2);
+  }
+
   delay(ms = 300) {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
