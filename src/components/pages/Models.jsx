@@ -16,9 +16,10 @@ const Models = () => {
 const location = useLocation();
   const [models, setModels] = useState([]);
   const [filteredModels, setFilteredModels] = useState([]);
-  const [accounts, setAccounts] = useState([]);
+const [accounts, setAccounts] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [dashboardFilter, setDashboardFilter] = useState("");
+  const [activeFilter, setActiveFilter] = useState("all");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [showAddModal, setShowAddModal] = useState(false);
@@ -80,6 +81,25 @@ useEffect(() => {
       }
     }
 
+    // Apply quick filter tabs
+    if (!dashboardFilter) { // Only apply quick filters if no dashboard filter is active
+      switch (activeFilter) {
+        case 'to-follow':
+          filtered = filtered.filter(model => !model.followedBy || model.followedBy.trim() === "");
+          break;
+        case 'to-dm':
+          filtered = filtered.filter(model => model.followedBy && model.followedBy.trim() !== "" && !model.dmSent);
+          break;
+        case 'completed':
+          filtered = filtered.filter(model => model.dmSent);
+          break;
+        case 'all':
+        default:
+          // No additional filtering for 'all'
+          break;
+      }
+    }
+
     // Apply search filter
     if (searchTerm) {
       filtered = filtered.filter(model =>
@@ -91,7 +111,7 @@ useEffect(() => {
     }
 
     setFilteredModels(filtered);
-  }, [searchTerm, models, dashboardFilter]);
+  }, [searchTerm, models, dashboardFilter, activeFilter]);
   const handleAddModel = async (formData) => {
     try {
       const newModel = await modelService.create(formData);
@@ -224,6 +244,30 @@ const handleEdit = (model) => {
         >
           Add Model
         </Button>
+</div>
+
+      {/* Quick Filter Tabs */}
+      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-6">
+        <div className="flex flex-wrap gap-2">
+          {[
+            { key: 'all', label: 'All', count: models.length },
+            { key: 'to-follow', label: 'To Follow', count: models.filter(m => !m.followedBy || m.followedBy.trim() === "").length },
+            { key: 'to-dm', label: 'To DM', count: models.filter(m => m.followedBy && m.followedBy.trim() !== "" && !m.dmSent).length },
+            { key: 'completed', label: 'Completed', count: models.filter(m => m.dmSent).length }
+          ].map((filter) => (
+            <button
+              key={filter.key}
+              onClick={() => setActiveFilter(filter.key)}
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200 ${
+                activeFilter === filter.key
+                  ? 'bg-primary-600 text-white shadow-sm'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              }`}
+            >
+              {filter.label} ({filter.count})
+            </button>
+          ))}
+        </div>
       </div>
 
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
