@@ -245,10 +245,10 @@ const getPlatformBadgeColor = (platform) => {
                     onChange={(e) => onFollowedByChange && onFollowedByChange(model.Id, e.target.value)}
                     className="min-w-[150px] min-h-[40px] text-xs sm:text-sm"
                   >
-                    <option value="">Select Account</option>
+<option value="">Select Account</option>
                     {accounts.map((account) => (
                       <option key={account.Id} value={account.username}>
-                        {account.name} (@{account.username})
+                        @{account.username}
                       </option>
                     ))}
                   </Select>
