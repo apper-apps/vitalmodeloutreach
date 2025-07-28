@@ -311,13 +311,13 @@ const handleEdit = (model) => {
           >
             Add Model
           </Button>
-          <Button
+<Button
             icon="Upload"
             variant="secondary"
             onClick={() => setShowBulkAddModal(true)}
             className="mt-4 sm:mt-0"
           >
-            Bulk Add
+            Import Models
           </Button>
         </div>
       </div>
@@ -410,12 +410,12 @@ const handleEdit = (model) => {
         />
       </Modal>
 
-      <Modal
+<Modal
         isOpen={showBulkAddModal}
         onClose={() => setShowBulkAddModal(false)}
-        title="Bulk Add Models"
+        title="Import Models"
         footer={null}
-        size="lg"
+        size="xl"
       >
         <AddModelForm
           onSubmit={handleAddModel}
