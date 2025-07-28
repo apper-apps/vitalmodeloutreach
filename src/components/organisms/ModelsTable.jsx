@@ -67,9 +67,20 @@ const ModelsTable = ({ models, onEdit, onDelete, onBlacklist, accounts = [], onF
               </th>
             </tr>
           </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
-            {models.map((model, index) => (
-              <tr key={model.Id} className={`hover:bg-gray-50 transition-colors duration-200 ${index % 2 === 0 ? "bg-white" : "bg-gray-25"}`}>
+<tbody className="bg-white divide-y divide-gray-200">
+            {models.map((model, index) => {
+              const getRowBackgroundColor = () => {
+                if (model.dmSent) {
+                  return "bg-blue-50"; // Pale blue if DM Sent is checked
+                } else if (model.followedBy && model.followedBy.trim() !== "") {
+                  return "bg-yellow-50"; // Pale yellow if Followed By has value but DM not sent
+                } else {
+                  return index % 2 === 0 ? "bg-white" : "bg-gray-25"; // Default alternating colors
+                }
+              };
+
+              return (
+              <tr key={model.Id} className={`hover:bg-gray-50 transition-colors duration-200 ${getRowBackgroundColor()}`}>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <a
                     href={model.link}
@@ -149,10 +160,11 @@ const ModelsTable = ({ models, onEdit, onDelete, onBlacklist, accounts = [], onF
                       onClick={() => onDelete(model.Id)}
                       className="text-red-600 hover:text-red-700"
                     />
-                  </div>
+</div>
                 </td>
               </tr>
-            ))}
+            );
+            })}
           </tbody>
         </table>
       </div>
