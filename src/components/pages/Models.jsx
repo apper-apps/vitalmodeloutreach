@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
 import Button from "@/components/atoms/Button";
 import SearchBar from "@/components/molecules/SearchBar";
@@ -11,17 +12,25 @@ import Empty from "@/components/ui/Empty";
 import { modelService } from "@/services/api/modelService";
 import { blacklistService } from "@/services/api/blacklistService";
 import { accountService } from "@/services/api/accountService";
-
 const Models = () => {
-const [models, setModels] = useState([]);
+const location = useLocation();
+  const [models, setModels] = useState([]);
   const [filteredModels, setFilteredModels] = useState([]);
   const [accounts, setAccounts] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [dashboardFilter, setDashboardFilter] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [showAddModal, setShowAddModal] = useState(false);
   const [editingModel, setEditingModel] = useState(null);
-const loadModels = async () => {
+// Check for dashboard filter from URL params
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const filter = params.get('filter');
+    setDashboardFilter(filter || "");
+  }, [location.search]);
+
+  const loadModels = async () => {
     try {
       setLoading(true);
       setError("");
@@ -48,20 +57,41 @@ const loadModels = async () => {
     loadModels();
     loadAccounts();
   }, []);
-  useEffect(() => {
-    if (!searchTerm) {
-      setFilteredModels(models);
-    } else {
-      const filtered = models.filter(model =>
+useEffect(() => {
+    let filtered = models;
+
+    // Apply dashboard filter first
+    if (dashboardFilter) {
+      switch (dashboardFilter) {
+        case 'followed':
+          filtered = models.filter(model => model.followedBy);
+          break;
+        case 'dm-sent':
+          filtered = models.filter(model => model.dmSent);
+          break;
+        case 'to-follow':
+          filtered = models.filter(model => !model.followedBy);
+          break;
+        case 'to-dm':
+          filtered = models.filter(model => model.followedBy && !model.dmSent);
+          break;
+        default:
+          filtered = models;
+      }
+    }
+
+    // Apply search filter
+    if (searchTerm) {
+      filtered = filtered.filter(model =>
         model.link.toLowerCase().includes(searchTerm.toLowerCase()) ||
         model.platform.toLowerCase().includes(searchTerm.toLowerCase()) ||
         (model.followedBy && model.followedBy.toLowerCase().includes(searchTerm.toLowerCase())) ||
         (model.notes && model.notes.toLowerCase().includes(searchTerm.toLowerCase()))
       );
-      setFilteredModels(filtered);
     }
-  }, [searchTerm, models]);
 
+    setFilteredModels(filtered);
+  }, [searchTerm, models, dashboardFilter]);
   const handleAddModel = async (formData) => {
     try {
       const newModel = await modelService.create(formData);
