@@ -3,7 +3,7 @@ import { cn } from "@/utils/cn";
 
 const Input = forwardRef(({ 
   className, 
-  type = "text", 
+  type = "text",
   label,
   error,
   ...props 
@@ -19,6 +19,7 @@ const Input = forwardRef(({
         type={type}
         className={cn(
           "block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors duration-200",
+          type === "date" && "appearance-none",
           error && "border-red-300 focus:ring-red-500 focus:border-red-500",
           className
         )}
@@ -35,3 +36,4 @@ const Input = forwardRef(({
 Input.displayName = "Input";
 
 export default Input;
+Input.displayName = "Input";

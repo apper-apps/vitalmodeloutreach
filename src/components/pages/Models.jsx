@@ -6,6 +6,7 @@ import SearchBar from "@/components/molecules/SearchBar";
 import Modal from "@/components/molecules/Modal";
 import ModelsTable from "@/components/organisms/ModelsTable";
 import AddModelForm from "@/components/organisms/AddModelForm";
+import AdvancedFilters from "@/components/organisms/AdvancedFilters";
 import Loading from "@/components/ui/Loading";
 import Error from "@/components/ui/Error";
 import Empty from "@/components/ui/Empty";
@@ -20,6 +21,18 @@ const [models, setModels] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [dashboardFilter, setDashboardFilter] = useState("");
   const [activeFilter, setActiveFilter] = useState("all");
+  const [advancedFilters, setAdvancedFilters] = useState({
+    platform: null,
+    followedBy: null,
+    dmSent: null,
+    dateAddedFrom: null,
+    dateAddedTo: null,
+    followDateFrom: null,
+    followDateTo: null,
+    dmSentDateFrom: null,
+    dmSentDateTo: null
+  });
+  const [showAdvancedFilters, setShowAdvancedFilters] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [showAddModal, setShowAddModal] = useState(false);
@@ -101,6 +114,58 @@ useEffect(() => {
       }
     }
 
+    // Apply advanced filters
+    if (advancedFilters.platform) {
+      filtered = filtered.filter(model => model.platform === advancedFilters.platform);
+    }
+
+    if (advancedFilters.followedBy) {
+      if (advancedFilters.followedBy === '__none__') {
+        filtered = filtered.filter(model => !model.followedBy || model.followedBy.trim() === '');
+      } else {
+        filtered = filtered.filter(model => model.followedBy === advancedFilters.followedBy);
+      }
+    }
+
+    if (advancedFilters.dmSent !== null) {
+      const dmSentFilter = advancedFilters.dmSent === 'true';
+      filtered = filtered.filter(model => model.dmSent === dmSentFilter);
+    }
+
+    // Date range filters
+    if (advancedFilters.dateAddedFrom) {
+      const fromDate = new Date(advancedFilters.dateAddedFrom);
+      filtered = filtered.filter(model => new Date(model.dateAdded) >= fromDate);
+    }
+
+    if (advancedFilters.dateAddedTo) {
+      const toDate = new Date(advancedFilters.dateAddedTo);
+      toDate.setHours(23, 59, 59, 999); // End of day
+      filtered = filtered.filter(model => new Date(model.dateAdded) <= toDate);
+    }
+
+    if (advancedFilters.followDateFrom) {
+      const fromDate = new Date(advancedFilters.followDateFrom);
+      filtered = filtered.filter(model => model.followDate && new Date(model.followDate) >= fromDate);
+    }
+
+    if (advancedFilters.followDateTo) {
+      const toDate = new Date(advancedFilters.followDateTo);
+      toDate.setHours(23, 59, 59, 999); // End of day
+      filtered = filtered.filter(model => model.followDate && new Date(model.followDate) <= toDate);
+    }
+
+    if (advancedFilters.dmSentDateFrom) {
+      const fromDate = new Date(advancedFilters.dmSentDateFrom);
+      filtered = filtered.filter(model => model.dmSentDate && new Date(model.dmSentDate) >= fromDate);
+    }
+
+    if (advancedFilters.dmSentDateTo) {
+      const toDate = new Date(advancedFilters.dmSentDateTo);
+      toDate.setHours(23, 59, 59, 999); // End of day
+      filtered = filtered.filter(model => model.dmSentDate && new Date(model.dmSentDate) <= toDate);
+    }
+
     // Apply search filter
     if (searchTerm) {
       filtered = filtered.filter(model =>
@@ -112,7 +177,7 @@ useEffect(() => {
     }
 
     setFilteredModels(filtered);
-  }, [searchTerm, models, dashboardFilter, activeFilter]);
+  }, [searchTerm, models, dashboardFilter, activeFilter, advancedFilters]);
   const handleAddModel = async (formData) => {
     try {
       const newModel = await modelService.create(formData);
@@ -281,7 +346,7 @@ const handleEdit = (model) => {
         </div>
       </div>
 
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
+<div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
         <div className="flex-1 max-w-md">
           <SearchBar
             value={searchTerm}
@@ -293,6 +358,16 @@ const handleEdit = (model) => {
           {filteredModels.length} of {models.length} models
         </div>
       </div>
+
+      {/* Advanced Filters */}
+      <AdvancedFilters
+        filters={advancedFilters}
+        onFiltersChange={setAdvancedFilters}
+        accounts={accounts}
+        models={models}
+        isExpanded={showAdvancedFilters}
+        onToggleExpanded={() => setShowAdvancedFilters(!showAdvancedFilters)}
+      />
 
       {filteredModels.length === 0 ? (
         models.length === 0 ? (
