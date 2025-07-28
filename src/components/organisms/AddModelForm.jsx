@@ -64,13 +64,20 @@ const detectPlatformFromUrl = async (url) => {
     if (!url || !isValidUrl(url)) return "";
 
     try {
-      const urlObj = new URL(url);
-      const domain = urlObj.hostname.replace('www.', '');
+      // Handle URLs with or without protocol
+      let normalizedUrl = url;
+      if (!url.startsWith('http://') && !url.startsWith('https://')) {
+        normalizedUrl = 'https://' + url;
+      }
+      
+      const urlObj = new URL(normalizedUrl);
+      const domain = urlObj.hostname.replace(/^www\./, '').toLowerCase();
       
       const settings = await settingsService.get();
-      const matchedPlatform = settings.platforms.find(platform => 
-        domain.includes(platform.domain.replace('www.', ''))
-      );
+      const matchedPlatform = settings.platforms.find(platform => {
+        const platformDomain = platform.domain.replace(/^www\./, '').toLowerCase();
+        return domain === platformDomain || domain.endsWith('.' + platformDomain);
+      });
       
       return matchedPlatform ? matchedPlatform.name : "";
     } catch (error) {
@@ -104,21 +111,19 @@ const detectPlatformFromUrl = async (url) => {
   };
 
 const handleChange = async (field, value) => {
-    setFormData(prev => ({
-      ...prev,
-      [field]: value
-    }));
-
     // Auto-detect platform when URL is entered or changed
     if (field === "link" && value) {
       const detectedPlatform = await detectPlatformFromUrl(value);
-      if (detectedPlatform) {
-        setFormData(prev => ({
-          ...prev,
-          [field]: value,
-          platform: detectedPlatform
-        }));
-      }
+      setFormData(prev => ({
+        ...prev,
+        [field]: value,
+        platform: detectedPlatform || prev.platform
+      }));
+    } else {
+      setFormData(prev => ({
+        ...prev,
+        [field]: value
+      }));
     }
 
     // Clear error when user starts typing
