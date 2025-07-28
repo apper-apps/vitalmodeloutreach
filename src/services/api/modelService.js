@@ -29,10 +29,13 @@ class ModelService {
     return { ...newModel };
   }
 
-  async update(id, modelData) {
+async update(id, modelData) {
     await this.delay();
     
-    const index = this.models.findIndex(model => model.Id === parseInt(id));
+    const parsedId = parseInt(id);
+    if (isNaN(parsedId)) throw new Error("Invalid model ID");
+    
+    const index = this.models.findIndex(model => model.Id === parsedId);
     if (index === -1) throw new Error("Model not found");
     
     this.models[index] = { ...this.models[index], ...modelData };

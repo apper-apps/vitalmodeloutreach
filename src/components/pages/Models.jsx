@@ -401,6 +401,10 @@ const handleEdit = (model) => {
           onFollowedByChange={handleFollowedByChange}
           onDMSentChange={handleDMSentChange}
           onDMSentDateChange={handleDMSentDateChange}
+          onInlineUpdate={async (modelId, updateData) => {
+            const updatedModel = await modelService.update(modelId, updateData);
+            setModels(prev => prev.map(m => m.Id === modelId ? updatedModel : m));
+          }}
         />
       </div>
       )}
