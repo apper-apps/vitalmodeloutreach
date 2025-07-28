@@ -14,17 +14,18 @@ import { blacklistService } from "@/services/api/blacklistService";
 import { accountService } from "@/services/api/accountService";
 const Models = () => {
 const location = useLocation();
-  const [models, setModels] = useState([]);
+const [models, setModels] = useState([]);
   const [filteredModels, setFilteredModels] = useState([]);
-const [accounts, setAccounts] = useState([]);
+  const [accounts, setAccounts] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [dashboardFilter, setDashboardFilter] = useState("");
   const [activeFilter, setActiveFilter] = useState("all");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [showAddModal, setShowAddModal] = useState(false);
+  const [showBulkAddModal, setShowBulkAddModal] = useState(false);
   const [editingModel, setEditingModel] = useState(null);
-// Check for dashboard filter from URL params
+  // Check for dashboard filter from URL params
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     const filter = params.get('filter');
@@ -237,14 +238,24 @@ const handleEdit = (model) => {
           <h2 className="text-2xl font-bold text-gray-900 mb-2">Models</h2>
           <p className="text-gray-600">Manage your model outreach database.</p>
         </div>
-        <Button
-          icon="Plus"
-          onClick={() => setShowAddModal(true)}
-          className="mt-4 sm:mt-0"
-        >
-          Add Model
-        </Button>
-</div>
+<div className="flex space-x-2">
+          <Button
+            icon="Plus"
+            onClick={() => setShowAddModal(true)}
+            className="mt-4 sm:mt-0"
+          >
+            Add Model
+          </Button>
+          <Button
+            icon="Upload"
+            variant="secondary"
+            onClick={() => setShowBulkAddModal(true)}
+            className="mt-4 sm:mt-0"
+          >
+            Bulk Add
+          </Button>
+        </div>
+      </div>
 
       {/* Quick Filter Tabs */}
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-6">
@@ -312,7 +323,7 @@ const handleEdit = (model) => {
         />
       )}
 
-      <Modal
+<Modal
         isOpen={showAddModal}
         onClose={() => setShowAddModal(false)}
         title="Add New Model"
@@ -321,6 +332,19 @@ const handleEdit = (model) => {
         <AddModelForm
           onSubmit={handleAddModel}
           onCancel={() => setShowAddModal(false)}
+        />
+      </Modal>
+
+      <Modal
+        isOpen={showBulkAddModal}
+        onClose={() => setShowBulkAddModal(false)}
+        title="Bulk Add Models"
+        footer={null}
+        size="lg"
+      >
+        <AddModelForm
+          onSubmit={handleAddModel}
+          onCancel={() => setShowBulkAddModal(false)}
         />
       </Modal>
 
