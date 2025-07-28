@@ -93,6 +93,23 @@ async moveToBlacklist(id) {
     this.models.splice(index, 1);
     
     return true;
+}
+
+  // Helper method for duplicate detection
+  async findByCleanedUrl(url) {
+    await this.delay();
+    
+    const cleanUrl = (inputUrl) => {
+      try {
+        const urlObj = new URL(inputUrl);
+        return `${urlObj.protocol}//${urlObj.hostname}${urlObj.pathname}`.replace(/\/$/, '');
+      } catch (error) {
+        return inputUrl;
+      }
+    };
+    
+    const cleanedTarget = cleanUrl(url);
+    return this.models.find(model => cleanUrl(model.link) === cleanedTarget);
   }
 
   delay(ms = 300) {

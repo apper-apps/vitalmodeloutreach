@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from "react";
+import { toast } from "react-toastify";
 import Input from "@/components/atoms/Input";
 import Select from "@/components/atoms/Select";
 import Textarea from "@/components/atoms/Textarea";
 import Button from "@/components/atoms/Button";
 import { settingsService } from "@/services/api/settingsService";
+import { modelService } from "@/services/api/modelService";
+import { blacklistService } from "@/services/api/blacklistService";
 const AddModelForm = ({ model, onSubmit, onCancel }) => {
   const [formData, setFormData] = useState({
     link: "",
@@ -84,13 +87,54 @@ const detectPlatformFromUrl = async (url) => {
       return "";
     }
   };
-  const validateForm = () => {
+// URL cleaning utility
+  const cleanUrl = (url) => {
+    if (!url) return url;
+    
+    try {
+      const urlObj = new URL(url);
+      // Remove all query parameters and hash fragments
+      return `${urlObj.protocol}//${urlObj.hostname}${urlObj.pathname}`.replace(/\/$/, '');
+    } catch (error) {
+      return url; // Return original if parsing fails
+    }
+  };
+
+  const validateForm = async () => {
     const newErrors = {};
 
     if (!formData.link.trim()) {
       newErrors.link = "Link is required";
     } else if (!isValidUrl(formData.link)) {
       newErrors.link = "Please enter a valid URL";
+    } else {
+      // Check for duplicates using cleaned URLs
+      const cleanedUrl = cleanUrl(formData.link);
+      
+      try {
+        // Check models for duplicate
+        const existingModels = await modelService.getAll();
+        const duplicateModel = existingModels.find(model => 
+          cleanUrl(model.link) === cleanedUrl && model.Id !== formData.Id
+        );
+        
+        if (duplicateModel) {
+          newErrors.link = "This link already exists in your models list";
+        } else {
+          // Check blacklist for duplicate
+          const existingBlacklist = await blacklistService.getAll();
+          const duplicateBlacklist = existingBlacklist.find(item => 
+            cleanUrl(item.link) === cleanedUrl
+          );
+          
+          if (duplicateBlacklist) {
+            newErrors.link = "This link exists in your blacklist";
+          }
+        }
+      } catch (error) {
+        console.error('Error checking for duplicates:', error);
+        // Don't block submission on error, just log it
+      }
     }
 
     if (!formData.platform) {
@@ -101,7 +145,7 @@ const detectPlatformFromUrl = async (url) => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const isValidUrl = (string) => {
+const isValidUrl = (string) => {
     try {
       new URL(string);
       return true;
@@ -109,14 +153,16 @@ const detectPlatformFromUrl = async (url) => {
       return false;
     }
   };
-
 const handleChange = async (field, value) => {
     // Auto-detect platform when URL is entered or changed
     if (field === "link" && value) {
-      const detectedPlatform = await detectPlatformFromUrl(value);
+      // Clean the URL automatically
+      const cleanedUrl = cleanUrl(value);
+      const detectedPlatform = await detectPlatformFromUrl(cleanedUrl);
+      
       setFormData(prev => ({
         ...prev,
-        [field]: value,
+        [field]: cleanedUrl,
         platform: detectedPlatform || prev.platform
       }));
     } else {
@@ -135,22 +181,32 @@ const handleChange = async (field, value) => {
     }
   };
 
-  const handleSubmit = async (e) => {
+const handleSubmit = async (e) => {
     e.preventDefault();
     
-    if (!validateForm()) return;
+    const isValid = await validateForm();
+    if (!isValid) return;
 
     setIsSubmitting(true);
     
     try {
-      await onSubmit(formData);
+      // Ensure URL is cleaned before submission
+      const cleanedFormData = {
+        ...formData,
+        link: cleanUrl(formData.link)
+      };
+      
+      await onSubmit(cleanedFormData);
+      toast.success(model ? "Model updated successfully!" : "Model added successfully!");
+    } catch (error) {
+      toast.error(error.message || "An error occurred. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+<form onSubmit={handleSubmit} className="space-y-4">
       <Input
         label="Profile Link *"
         type="url"
