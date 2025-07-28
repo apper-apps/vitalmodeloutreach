@@ -11,10 +11,28 @@
     @apply bg-gray-50 font-sans antialiased;
   }
 }
+/* Z-index hierarchy */
+@layer utilities {
+  .z-sidebar {
+    z-index: 30;
+  }
+  .z-mobile-overlay {
+    z-index: 40;
+  }
+  .z-mobile-sidebar {
+    z-index: 50;
+  }
+  .z-layout-content {
+    z-index: 10;
+  }
+  .z-toast {
+    z-index: 9999;
+  }
+}
 
 /* Toast customization */
 .Toastify__toast-container {
-  @apply z-[9999];
+  @apply z-toast;
 }
 
 .Toastify__toast {

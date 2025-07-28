@@ -20,7 +20,7 @@ function App() {
           </Route>
         </Routes>
         
-        <ToastContainer
+<ToastContainer
           position="top-right"
           autoClose={3000}
           hideProgressBar={false}
@@ -30,7 +30,7 @@ function App() {
           pauseOnFocusLoss
           draggable
           pauseOnHover
-          className="z-[9999]"
+          className="z-toast"
         />
       </div>
     </Router>
