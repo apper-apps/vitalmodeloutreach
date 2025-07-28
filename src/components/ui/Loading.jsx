@@ -23,17 +23,17 @@ const Loading = ({ type = "table" }) => {
         <div className="animate-pulse">
           <div className="h-6 bg-gray-200 rounded w-32 mb-4"></div>
           <div className="space-y-3">
-            {[1, 2, 3, 4, 5].map((i) => (
-              <div key={i} className="grid grid-cols-9 gap-4 py-3 border-b border-gray-100 last:border-0">
+{[1, 2, 3, 4, 5].map((i) => (
+              <div key={i} className="grid grid-cols-3 sm:grid-cols-6 lg:grid-cols-9 gap-2 sm:gap-4 py-3 border-b border-gray-100 last:border-0">
                 <div className="h-4 bg-gray-200 rounded"></div>
                 <div className="h-4 bg-gray-200 rounded"></div>
                 <div className="h-4 bg-gray-200 rounded"></div>
-                <div className="h-4 bg-gray-200 rounded"></div>
-                <div className="h-4 bg-gray-200 rounded"></div>
-                <div className="h-4 bg-gray-200 rounded"></div>
-                <div className="h-4 bg-gray-200 rounded"></div>
-                <div className="h-4 bg-gray-200 rounded"></div>
-                <div className="h-4 bg-gray-200 rounded"></div>
+                <div className="h-4 bg-gray-200 rounded hidden sm:block"></div>
+                <div className="h-4 bg-gray-200 rounded hidden sm:block"></div>
+                <div className="h-4 bg-gray-200 rounded hidden sm:block"></div>
+                <div className="h-4 bg-gray-200 rounded hidden lg:block"></div>
+                <div className="h-4 bg-gray-200 rounded hidden lg:block"></div>
+                <div className="h-4 bg-gray-200 rounded hidden lg:block"></div>
               </div>
             ))}
           </div>

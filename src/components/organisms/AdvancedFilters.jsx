@@ -45,18 +45,18 @@ function AdvancedFilters({
   };
 
   return (
-    <div className="bg-white border border-gray-200 rounded-lg p-4 space-y-4">
+<div className="bg-white border border-gray-200 rounded-lg p-3 sm:p-4 space-y-4">
       {/* Filter Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col space-y-2 sm:space-y-0 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center space-x-2">
           <Button
             variant="ghost"
-            size="sm"
+            size="md"
             onClick={onToggleExpanded}
-            className="text-gray-600 hover:text-gray-900"
+            className="text-gray-600 hover:text-gray-900 min-h-[44px] justify-start px-2"
           >
             <ApperIcon name={isExpanded ? "ChevronUp" : "ChevronDown"} size={16} />
-            Advanced Filters
+            <span className="text-sm sm:text-base">Advanced Filters</span>
           </Button>
           {activeFilterCount > 0 && (
             <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-primary-100 text-primary-800">
@@ -67,25 +67,26 @@ function AdvancedFilters({
         {activeFilterCount > 0 && (
           <Button
             variant="ghost"
-            size="sm"
+            size="md"
             onClick={clearFilters}
-            className="text-gray-500 hover:text-gray-700"
+            className="text-gray-500 hover:text-gray-700 min-h-[44px] w-full sm:w-auto justify-center sm:justify-start"
           >
             <ApperIcon name="X" size={14} />
-            Clear all
+            <span className="text-sm">Clear all</span>
           </Button>
         )}
       </div>
 
       {/* Filter Content */}
-      {isExpanded && (
+{isExpanded && (
         <div className="space-y-4">
           {/* Row 1: Platform, Followed By, DM Sent */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             <Select
               label="Platform"
               value={filters.platform || ''}
               onChange={(e) => handleFilterChange('platform', e.target.value)}
+              className="min-h-[44px]"
             >
               <option value="">All Platforms</option>
               {platforms.map(platform => (
@@ -99,6 +100,7 @@ function AdvancedFilters({
               label="Followed By"
               value={filters.followedBy || ''}
               onChange={(e) => handleFilterChange('followedBy', e.target.value)}
+              className="min-h-[44px]"
             >
               <option value="">All Accounts</option>
               <option value="__none__">Not Followed</option>
@@ -113,6 +115,7 @@ function AdvancedFilters({
               label="DM Sent Status"
               value={filters.dmSent || ''}
               onChange={(e) => handleFilterChange('dmSent', e.target.value)}
+              className="min-h-[44px]"
             >
               <option value="">All Statuses</option>
               <option value="true">DM Sent</option>
@@ -123,18 +126,20 @@ function AdvancedFilters({
           {/* Row 2: Date Added Range */}
           <div className="space-y-2">
             <label className="block text-sm font-medium text-gray-700">Date Added Range</label>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <Input
                 type="date"
                 placeholder="From date"
                 value={formatDateForInput(filters.dateAddedFrom)}
                 onChange={(e) => handleFilterChange('dateAddedFrom', e.target.value)}
+                className="min-h-[44px]"
               />
               <Input
                 type="date"
                 placeholder="To date"
                 value={formatDateForInput(filters.dateAddedTo)}
                 onChange={(e) => handleFilterChange('dateAddedTo', e.target.value)}
+                className="min-h-[44px]"
               />
             </div>
           </div>
@@ -142,18 +147,20 @@ function AdvancedFilters({
           {/* Row 3: Follow Date Range */}
           <div className="space-y-2">
             <label className="block text-sm font-medium text-gray-700">Follow Date Range</label>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <Input
                 type="date"
                 placeholder="From date"
                 value={formatDateForInput(filters.followDateFrom)}
                 onChange={(e) => handleFilterChange('followDateFrom', e.target.value)}
+                className="min-h-[44px]"
               />
               <Input
                 type="date"
                 placeholder="To date"
                 value={formatDateForInput(filters.followDateTo)}
                 onChange={(e) => handleFilterChange('followDateTo', e.target.value)}
+                className="min-h-[44px]"
               />
             </div>
           </div>
@@ -161,24 +168,26 @@ function AdvancedFilters({
           {/* Row 4: DM Sent Date Range */}
           <div className="space-y-2">
             <label className="block text-sm font-medium text-gray-700">DM Sent Date Range</label>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <Input
                 type="date"
                 placeholder="From date"
                 value={formatDateForInput(filters.dmSentDateFrom)}
                 onChange={(e) => handleFilterChange('dmSentDateFrom', e.target.value)}
+                className="min-h-[44px]"
               />
               <Input
                 type="date"
                 placeholder="To date"
                 value={formatDateForInput(filters.dmSentDateTo)}
                 onChange={(e) => handleFilterChange('dmSentDateTo', e.target.value)}
+                className="min-h-[44px]"
               />
             </div>
           </div>
 
           {/* Active Filters Summary */}
-          {activeFilterCount > 0 && (
+{activeFilterCount > 0 && (
             <div className="pt-2 border-t border-gray-200">
               <div className="text-sm text-gray-600 mb-2">Active filters:</div>
               <div className="flex flex-wrap gap-2">
@@ -187,7 +196,7 @@ function AdvancedFilters({
                     Platform: {filters.platform}
                     <button
                       onClick={() => handleFilterChange('platform', null)}
-                      className="ml-1 hover:text-blue-600"
+                      className="ml-1 hover:text-blue-600 min-h-[20px] min-w-[20px] flex items-center justify-center"
                     >
                       <ApperIcon name="X" size={12} />
                     </button>
@@ -198,7 +207,7 @@ function AdvancedFilters({
                     Followed By: {filters.followedBy === '__none__' ? 'Not Followed' : filters.followedBy}
                     <button
                       onClick={() => handleFilterChange('followedBy', null)}
-                      className="ml-1 hover:text-green-600"
+                      className="ml-1 hover:text-green-600 min-h-[20px] min-w-[20px] flex items-center justify-center"
                     >
                       <ApperIcon name="X" size={12} />
                     </button>
@@ -209,7 +218,7 @@ function AdvancedFilters({
                     DM: {filters.dmSent === 'true' ? 'Sent' : 'Not Sent'}
                     <button
                       onClick={() => handleFilterChange('dmSent', null)}
-                      className="ml-1 hover:text-purple-600"
+                      className="ml-1 hover:text-purple-600 min-h-[20px] min-w-[20px] flex items-center justify-center"
                     >
                       <ApperIcon name="X" size={12} />
                     </button>
@@ -223,7 +232,7 @@ function AdvancedFilters({
                         handleFilterChange('dateAddedFrom', null);
                         handleFilterChange('dateAddedTo', null);
                       }}
-                      className="ml-1 hover:text-yellow-600"
+                      className="ml-1 hover:text-yellow-600 min-h-[20px] min-w-[20px] flex items-center justify-center"
                     >
                       <ApperIcon name="X" size={12} />
                     </button>
@@ -237,7 +246,7 @@ function AdvancedFilters({
                         handleFilterChange('followDateFrom', null);
                         handleFilterChange('followDateTo', null);
                       }}
-                      className="ml-1 hover:text-indigo-600"
+                      className="ml-1 hover:text-indigo-600 min-h-[20px] min-w-[20px] flex items-center justify-center"
                     >
                       <ApperIcon name="X" size={12} />
                     </button>
@@ -251,7 +260,7 @@ function AdvancedFilters({
                         handleFilterChange('dmSentDateFrom', null);
                         handleFilterChange('dmSentDateTo', null);
                       }}
-                      className="ml-1 hover:text-pink-600"
+                      className="ml-1 hover:text-pink-600 min-h-[20px] min-w-[20px] flex items-center justify-center"
                     >
                       <ApperIcon name="X" size={12} />
                     </button>

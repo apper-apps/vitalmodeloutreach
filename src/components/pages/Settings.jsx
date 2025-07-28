@@ -274,17 +274,17 @@ const [settings, setSettings] = useState({});
   if (loading) return <Loading type="cards" />;
   if (error) return <Error message={error} onRetry={loadSettings} />;
   return (
-    <div className="space-y-6">
+<div className="space-y-4 md:space-y-6">
       <div>
-        <h2 className="text-2xl font-bold text-gray-900 mb-2">Settings</h2>
-        <p className="text-gray-600">Configure your ModelOutreach preferences.</p>
+        <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-1 sm:mb-2">Settings</h2>
+        <p className="text-sm sm:text-base text-gray-600">Configure your ModelOutreach preferences.</p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+<div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6">
+<div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 sm:p-6">
           <div className="flex items-center mb-4">
-            <ApperIcon name="User" size={20} className="text-primary-600 mr-2" />
-            <h3 className="text-lg font-semibold text-gray-900">Profile Settings</h3>
+            <ApperIcon name="User" size={18} sm:size={20} className="text-primary-600 mr-2" />
+            <h3 className="text-base sm:text-lg font-semibold text-gray-900">Profile Settings</h3>
           </div>
           
           <form onSubmit={handleSave} className="space-y-4">
@@ -293,6 +293,7 @@ const [settings, setSettings] = useState({});
               value={settings.displayName || ""}
               onChange={(e) => handleChange("displayName", e.target.value)}
               placeholder="Your display name"
+              className="min-h-[44px]"
             />
 
             <Input
@@ -301,12 +302,14 @@ const [settings, setSettings] = useState({});
               value={settings.email || ""}
               onChange={(e) => handleChange("email", e.target.value)}
               placeholder="your@email.com"
+              className="min-h-[44px]"
             />
 
-<Select
+            <Select
               label="Default Platform"
               value={settings.defaultPlatform || ""}
               onChange={(e) => handleChange("defaultPlatform", e.target.value)}
+              className="min-h-[44px]"
             >
               <option value="">Select default platform</option>
               {(settings.platforms || []).map((platform) => (
@@ -319,71 +322,74 @@ const [settings, setSettings] = useState({});
             <Button
               type="submit"
               disabled={saving}
-              className="w-full"
+              className="w-full min-h-[44px] text-sm sm:text-base"
+              size="md"
             >
               {saving ? "Saving..." : "Save Profile Settings"}
             </Button>
           </form>
         </div>
 
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+<div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 sm:p-6">
           <div className="flex items-center mb-4">
-            <ApperIcon name="Bell" size={20} className="text-primary-600 mr-2" />
-            <h3 className="text-lg font-semibold text-gray-900">Notification Settings</h3>
+            <ApperIcon name="Bell" size={18} sm:size={20} className="text-primary-600 mr-2" />
+            <h3 className="text-base sm:text-lg font-semibold text-gray-900">Notification Settings</h3>
           </div>
           
           <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <div>
+            <div className="flex items-start sm:items-center justify-between py-2">
+              <div className="flex-1 pr-4">
                 <label className="text-sm font-medium text-gray-700">Email Notifications</label>
-                <p className="text-xs text-gray-500">Get notified about important updates</p>
+                <p className="text-xs text-gray-500 mt-1">Get notified about important updates</p>
               </div>
               <input
                 type="checkbox"
                 checked={settings.emailNotifications || false}
                 onChange={(e) => handleChange("emailNotifications", e.target.checked)}
-                className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
+                className="h-5 w-5 sm:h-4 sm:w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded flex-shrink-0"
               />
             </div>
 
-            <div className="flex items-center justify-between">
-              <div>
+            <div className="flex items-start sm:items-center justify-between py-2">
+              <div className="flex-1 pr-4">
                 <label className="text-sm font-medium text-gray-700">Follow Reminders</label>
-                <p className="text-xs text-gray-500">Remind me to follow up with models</p>
+                <p className="text-xs text-gray-500 mt-1">Remind me to follow up with models</p>
               </div>
               <input
                 type="checkbox"
                 checked={settings.followReminders || false}
                 onChange={(e) => handleChange("followReminders", e.target.checked)}
-                className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
+                className="h-5 w-5 sm:h-4 sm:w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded flex-shrink-0"
               />
             </div>
 
-            <div className="flex items-center justify-between">
-              <div>
+            <div className="flex items-start sm:items-center justify-between py-2">
+              <div className="flex-1 pr-4">
                 <label className="text-sm font-medium text-gray-700">DM Reminders</label>
-                <p className="text-xs text-gray-500">Remind me to send DMs</p>
+                <p className="text-xs text-gray-500 mt-1">Remind me to send DMs</p>
               </div>
               <input
                 type="checkbox"
                 checked={settings.dmReminders || false}
                 onChange={(e) => handleChange("dmReminders", e.target.checked)}
-                className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
+                className="h-5 w-5 sm:h-4 sm:w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded flex-shrink-0"
               />
             </div>
           </div>
         </div>
 
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+<div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 sm:p-6">
           <div className="flex items-center mb-4">
-            <ApperIcon name="Database" size={20} className="text-primary-600 mr-2" />
-            <h3 className="text-lg font-semibold text-gray-900">Data Management</h3>
+            <ApperIcon name="Database" size={18} sm:size={20} className="text-primary-600 mr-2" />
+            <h3 className="text-base sm:text-lg font-semibold text-gray-900">Data Management</h3>
           </div>
-<div className="space-y-4">
+          <div className="space-y-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <Button
                 variant="outline"
-                className="w-full"
+                className="w-full min-h-[44px] text-sm"
+                size="md"
                 icon="Download"
                 onClick={handleExportModelsCSV}
               >
@@ -392,7 +398,8 @@ const [settings, setSettings] = useState({});
               
               <Button
                 variant="outline"
-                className="w-full"
+                className="w-full min-h-[44px] text-sm"
+                size="md"
                 icon="Download"
                 onClick={handleExportModelsJSON}
               >
@@ -401,7 +408,8 @@ const [settings, setSettings] = useState({});
               
               <Button
                 variant="outline"
-                className="w-full"
+                className="w-full min-h-[44px] text-sm"
+                size="md"
                 icon="Download"
                 onClick={handleExportBlacklistCSV}
               >
@@ -410,7 +418,8 @@ const [settings, setSettings] = useState({});
               
               <Button
                 variant="outline"
-                className="w-full"
+                className="w-full min-h-[44px] text-sm"
+                size="md"
                 icon="Download"
                 onClick={handleExportBlacklistJSON}
               >
@@ -420,7 +429,8 @@ const [settings, setSettings] = useState({});
             
             <Button
               variant="outline"
-              className="w-full"
+              className="w-full min-h-[44px] text-sm"
+              size="md"
               icon="Upload"
             >
               Import Data
@@ -428,73 +438,74 @@ const [settings, setSettings] = useState({});
             
             <Button
               variant="danger"
-              className="w-full"
+              className="w-full min-h-[44px] text-sm"
+              size="md"
               icon="Trash2"
             >
               Clear All Data
             </Button>
           </div>
-</div>
+        </div>
 
-        {/* My Accounts Section */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-          <div className="flex items-center justify-between mb-6">
+{/* My Accounts Section */}
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 sm:p-6">
+          <div className="flex flex-col space-y-3 sm:space-y-0 sm:flex-row sm:items-center sm:justify-between mb-6">
             <div className="flex items-center">
-              <ApperIcon name="Users" size={20} className="text-primary-600 mr-2" />
-              <h3 className="text-lg font-semibold text-gray-900">My Accounts</h3>
+              <ApperIcon name="Users" size={18} sm:size={20} className="text-primary-600 mr-2" />
+              <h3 className="text-base sm:text-lg font-semibold text-gray-900">My Accounts</h3>
             </div>
             <Button
               onClick={handleAddAccount}
-              size="sm"
-              className="flex items-center gap-2"
+              size="md"
+              className="flex items-center gap-2 min-h-[44px] w-full sm:w-auto justify-center"
             >
               <ApperIcon name="Plus" size={16} />
-              Add Account
+              <span className="text-sm">Add Account</span>
             </Button>
           </div>
 
           {accounts.length === 0 ? (
             <div className="text-center py-8 text-gray-500">
               <ApperIcon name="Users" size={48} className="mx-auto mb-3 text-gray-300" />
-              <p>No accounts added yet</p>
+              <p className="text-sm sm:text-base">No accounts added yet</p>
               <p className="text-sm">Add your first outreach account to get started</p>
             </div>
           ) : (
             <div className="space-y-3">
               {accounts.map((account) => (
-                <div key={account.Id} className="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
+                <div key={account.Id} className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-4 border border-gray-200 rounded-lg space-y-3 sm:space-y-0">
                   <div className="flex items-center space-x-3">
-                    <div className="w-10 h-10 bg-primary-100 rounded-lg flex items-center justify-center">
+                    <div className="w-10 h-10 bg-primary-100 rounded-lg flex items-center justify-center flex-shrink-0">
                       <ApperIcon name="User" size={20} className="text-primary-600" />
                     </div>
-                    <div>
-                      <h4 className="font-medium text-gray-900">{account.name}</h4>
-                      <div className="flex items-center space-x-4 text-sm text-gray-500">
+                    <div className="min-w-0 flex-1">
+                      <h4 className="font-medium text-gray-900 text-sm sm:text-base truncate">{account.name}</h4>
+                      <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-4 text-xs sm:text-sm text-gray-500 space-y-1 sm:space-y-0">
                         <span className="flex items-center">
-                          <ApperIcon name="Globe" size={14} className="mr-1" />
-                          {account.platform}
+                          <ApperIcon name="Globe" size={14} className="mr-1 flex-shrink-0" />
+                          <span className="truncate">{account.platform}</span>
                         </span>
                         <span className="flex items-center">
-                          <ApperIcon name="AtSign" size={14} className="mr-1" />
-                          {account.username}
+                          <ApperIcon name="AtSign" size={14} className="mr-1 flex-shrink-0" />
+                          <span className="truncate">{account.username}</span>
                         </span>
                       </div>
                     </div>
                   </div>
-                  <div className="flex items-center space-x-2">
+                  <div className="flex items-center space-x-2 justify-end sm:justify-start">
                     <Button
                       variant="ghost"
-                      size="sm"
+                      size="md"
                       onClick={() => handleEditAccount(account)}
-                      className="text-gray-600 hover:text-gray-900"
+                      className="text-gray-600 hover:text-gray-900 min-h-[44px] min-w-[44px] flex items-center justify-center"
                     >
                       <ApperIcon name="Edit" size={16} />
                     </Button>
                     <Button
                       variant="ghost"
-                      size="sm"
+                      size="md"
                       onClick={() => setDeleteConfirm(account)}
-                      className="text-red-600 hover:text-red-700"
+                      className="text-red-600 hover:text-red-700 min-h-[44px] min-w-[44px] flex items-center justify-center"
                     >
                       <ApperIcon name="Trash2" size={16} />
                     </Button>
@@ -504,48 +515,48 @@ const [settings, setSettings] = useState({});
             </div>
           )}
         </div>
-</div>
+      </div>
 
-        {/* Platforms Section */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-          <div className="flex items-center justify-between mb-6">
+{/* Platforms Section */}
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 sm:p-6">
+          <div className="flex flex-col space-y-3 sm:space-y-0 sm:flex-row sm:items-center sm:justify-between mb-6">
             <div className="flex items-center">
-              <ApperIcon name="Globe" size={20} className="text-primary-600 mr-2" />
-              <h3 className="text-lg font-semibold text-gray-900">Platforms</h3>
+              <ApperIcon name="Globe" size={18} sm:size={20} className="text-primary-600 mr-2" />
+              <h3 className="text-base sm:text-lg font-semibold text-gray-900">Platforms</h3>
             </div>
             <Button
               onClick={handleAddPlatform}
-              size="sm"
-              className="flex items-center gap-2"
+              size="md"
+              className="flex items-center gap-2 min-h-[44px] w-full sm:w-auto justify-center"
             >
               <ApperIcon name="Plus" size={16} />
-              Add Platform
+              <span className="text-sm">Add Platform</span>
             </Button>
           </div>
 
           {!settings.platforms || settings.platforms.length === 0 ? (
             <div className="text-center py-8 text-gray-500">
               <ApperIcon name="Globe" size={48} className="mx-auto mb-3 text-gray-300" />
-              <p>No platforms configured yet</p>
+              <p className="text-sm sm:text-base">No platforms configured yet</p>
               <p className="text-sm">Add your first platform to get started</p>
             </div>
           ) : (
             <div className="space-y-3">
               {settings.platforms.map((platform) => (
-                <div key={platform.Id} className="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
+                <div key={platform.Id} className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-4 border border-gray-200 rounded-lg space-y-3 sm:space-y-0">
                   <div className="flex items-center space-x-3">
-                    <div className="w-10 h-10 bg-primary-100 rounded-lg flex items-center justify-center">
+                    <div className="w-10 h-10 bg-primary-100 rounded-lg flex items-center justify-center flex-shrink-0">
                       <ApperIcon name="Globe" size={20} className="text-primary-600" />
                     </div>
-                    <div>
-                      <h4 className="font-medium text-gray-900">{platform.name}</h4>
-                      <div className="flex items-center space-x-4 text-sm text-gray-500">
+                    <div className="min-w-0 flex-1">
+                      <h4 className="font-medium text-gray-900 text-sm sm:text-base truncate">{platform.name}</h4>
+                      <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-4 text-xs sm:text-sm text-gray-500 space-y-2 sm:space-y-0">
                         <span className="flex items-center">
-                          <ApperIcon name="Link" size={14} className="mr-1" />
-                          {platform.domain}
+                          <ApperIcon name="Link" size={14} className="mr-1 flex-shrink-0" />
+                          <span className="truncate">{platform.domain}</span>
                         </span>
                         <span 
-                          className="px-2 py-1 rounded-full text-xs border"
+                          className="px-2 py-1 rounded-full text-xs border inline-block"
                           style={{
                             backgroundColor: platform.pillBackgroundColor,
                             color: platform.pillTextColor,
@@ -557,20 +568,20 @@ const [settings, setSettings] = useState({});
                       </div>
                     </div>
                   </div>
-                  <div className="flex items-center space-x-2">
+                  <div className="flex items-center space-x-2 justify-end sm:justify-start">
                     <Button
                       variant="ghost"
-                      size="sm"
+                      size="md"
                       onClick={() => handleEditPlatform(platform)}
-                      className="text-gray-600 hover:text-gray-900"
+                      className="text-gray-600 hover:text-gray-900 min-h-[44px] min-w-[44px] flex items-center justify-center"
                     >
                       <ApperIcon name="Edit" size={16} />
                     </Button>
                     <Button
                       variant="ghost"
-                      size="sm"
+                      size="md"
                       onClick={() => setDeletePlatformConfirm(platform)}
-                      className="text-red-600 hover:text-red-700"
+                      className="text-red-600 hover:text-red-700 min-h-[44px] min-w-[44px] flex items-center justify-center"
                     >
                       <ApperIcon name="Trash2" size={16} />
                     </Button>
@@ -579,6 +590,7 @@ const [settings, setSettings] = useState({});
               ))}
             </div>
           )}
+        </div>
         </div>
 
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
@@ -611,7 +623,7 @@ const [settings, setSettings] = useState({});
           </div>
         </div>
 
-      {/* Account Modal */}
+{/* Account Modal */}
       <Modal
         isOpen={showAccountModal}
         onClose={() => setShowAccountModal(false)}
@@ -623,13 +635,15 @@ const [settings, setSettings] = useState({});
             value={accountForm.name}
             onChange={(e) => handleAccountFormChange("name", e.target.value)}
             placeholder="e.g., Talent Scout Official"
+            className="min-h-[44px]"
             required
           />
           
-<Select
+          <Select
             label="Platform"
             value={accountForm.platform}
             onChange={(e) => handleAccountFormChange("platform", e.target.value)}
+            className="min-h-[44px]"
             required
           >
             {(settings.platforms || []).map((platform) => (
@@ -644,60 +658,67 @@ const [settings, setSettings] = useState({});
             value={accountForm.username}
             onChange={(e) => handleAccountFormChange("username", e.target.value)}
             placeholder="e.g., talent_scout_official"
+            className="min-h-[44px]"
             required
           />
           
-          <div className="flex justify-end space-x-3 pt-4">
+          <div className="flex flex-col space-y-2 sm:space-y-0 sm:flex-row sm:justify-end sm:space-x-3 pt-4">
             <Button
               type="button"
               variant="ghost"
               onClick={() => setShowAccountModal(false)}
+              className="min-h-[44px] w-full sm:w-auto order-2 sm:order-1"
             >
               Cancel
             </Button>
-            <Button type="submit">
+            <Button 
+              type="submit"
+              className="min-h-[44px] w-full sm:w-auto order-1 sm:order-2"
+            >
               {editingAccount ? "Update Account" : "Add Account"}
             </Button>
           </div>
         </form>
       </Modal>
 
-      {/* Delete Confirmation Modal */}
+{/* Delete Confirmation Modal */}
       <Modal
         isOpen={!!deleteConfirm}
         onClose={() => setDeleteConfirm(null)}
         title="Delete Account"
       >
         <div className="space-y-4">
-          <div className="flex items-center space-x-3 p-4 bg-red-50 rounded-lg">
-            <ApperIcon name="AlertTriangle" size={20} className="text-red-600" />
+          <div className="flex items-start space-x-3 p-4 bg-red-50 rounded-lg">
+            <ApperIcon name="AlertTriangle" size={20} className="text-red-600 flex-shrink-0 mt-0.5" />
             <div>
-              <p className="font-medium text-red-900">Are you sure?</p>
-              <p className="text-sm text-red-700">
+              <p className="font-medium text-red-900 text-sm sm:text-base">Are you sure?</p>
+              <p className="text-sm text-red-700 mt-1">
                 This will permanently delete "{deleteConfirm?.name}" account. This action cannot be undone.
               </p>
             </div>
           </div>
           
-          <div className="flex justify-end space-x-3">
+          <div className="flex flex-col space-y-2 sm:space-y-0 sm:flex-row sm:justify-end sm:space-x-3">
             <Button
               variant="ghost"
               onClick={() => setDeleteConfirm(null)}
+              className="min-h-[44px] w-full sm:w-auto order-2 sm:order-1"
             >
               Cancel
             </Button>
             <Button
               variant="destructive"
               onClick={() => handleDeleteAccount(deleteConfirm.Id)}
+              className="min-h-[44px] w-full sm:w-auto order-1 sm:order-2"
             >
               Delete Account
             </Button>
           </div>
         </div>
-</Modal>
+      </Modal>
 
       {/* Platform Modal */}
-      <Modal
+<Modal
         isOpen={showPlatformModal}
         onClose={() => setShowPlatformModal(false)}
         title={editingPlatform ? "Edit Platform" : "Add New Platform"}
@@ -708,6 +729,7 @@ const [settings, setSettings] = useState({});
             value={platformForm.name}
             onChange={(e) => handlePlatformFormChange("name", e.target.value)}
             placeholder="e.g., Fansly"
+            className="min-h-[44px]"
             required
           />
           
@@ -716,10 +738,11 @@ const [settings, setSettings] = useState({});
             value={platformForm.domain}
             onChange={(e) => handlePlatformFormChange("domain", e.target.value)}
             placeholder="e.g., fansly.com"
+            className="min-h-[44px]"
             required
           />
           
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Pill Background Color
@@ -729,13 +752,13 @@ const [settings, setSettings] = useState({});
                   type="color"
                   value={platformForm.pillBackgroundColor}
                   onChange={(e) => handlePlatformFormChange("pillBackgroundColor", e.target.value)}
-                  className="w-10 h-10 border border-gray-300 rounded cursor-pointer"
+                  className="w-12 h-12 sm:w-10 sm:h-10 border border-gray-300 rounded cursor-pointer flex-shrink-0"
                 />
                 <Input
                   value={platformForm.pillBackgroundColor}
                   onChange={(e) => handlePlatformFormChange("pillBackgroundColor", e.target.value)}
                   placeholder="#f3f4f6"
-                  className="flex-1"
+                  className="flex-1 min-h-[44px]"
                 />
               </div>
             </div>
@@ -749,13 +772,13 @@ const [settings, setSettings] = useState({});
                   type="color"
                   value={platformForm.pillTextColor}
                   onChange={(e) => handlePlatformFormChange("pillTextColor", e.target.value)}
-                  className="w-10 h-10 border border-gray-300 rounded cursor-pointer"
+                  className="w-12 h-12 sm:w-10 sm:h-10 border border-gray-300 rounded cursor-pointer flex-shrink-0"
                 />
                 <Input
                   value={platformForm.pillTextColor}
                   onChange={(e) => handlePlatformFormChange("pillTextColor", e.target.value)}
                   placeholder="#374151"
-                  className="flex-1"
+                  className="flex-1 min-h-[44px]"
                 />
               </div>
             </div>
@@ -775,48 +798,54 @@ const [settings, setSettings] = useState({});
             </span>
           </div>
           
-          <div className="flex justify-end space-x-3 pt-4">
+          <div className="flex flex-col space-y-2 sm:space-y-0 sm:flex-row sm:justify-end sm:space-x-3 pt-4">
             <Button
               type="button"
               variant="ghost"
               onClick={() => setShowPlatformModal(false)}
+              className="min-h-[44px] w-full sm:w-auto order-2 sm:order-1"
             >
               Cancel
             </Button>
-            <Button type="submit">
+            <Button 
+              type="submit"
+              className="min-h-[44px] w-full sm:w-auto order-1 sm:order-2"
+            >
               {editingPlatform ? "Update Platform" : "Add Platform"}
             </Button>
           </div>
         </form>
       </Modal>
 
-      {/* Delete Platform Confirmation Modal */}
+{/* Delete Platform Confirmation Modal */}
       <Modal
         isOpen={!!deletePlatformConfirm}
         onClose={() => setDeletePlatformConfirm(null)}
         title="Delete Platform"
       >
         <div className="space-y-4">
-          <div className="flex items-center space-x-3 p-4 bg-red-50 rounded-lg">
-            <ApperIcon name="AlertTriangle" size={20} className="text-red-600" />
+          <div className="flex items-start space-x-3 p-4 bg-red-50 rounded-lg">
+            <ApperIcon name="AlertTriangle" size={20} className="text-red-600 flex-shrink-0 mt-0.5" />
             <div>
-              <p className="font-medium text-red-900">Are you sure?</p>
-              <p className="text-sm text-red-700">
+              <p className="font-medium text-red-900 text-sm sm:text-base">Are you sure?</p>
+              <p className="text-sm text-red-700 mt-1">
                 This will permanently delete "{deletePlatformConfirm?.name}" platform. This action cannot be undone.
               </p>
             </div>
           </div>
           
-          <div className="flex justify-end space-x-3">
+          <div className="flex flex-col space-y-2 sm:space-y-0 sm:flex-row sm:justify-end sm:space-x-3">
             <Button
               variant="ghost"
               onClick={() => setDeletePlatformConfirm(null)}
+              className="min-h-[44px] w-full sm:w-auto order-2 sm:order-1"
             >
               Cancel
             </Button>
             <Button
               variant="destructive"
               onClick={() => handleDeletePlatform(deletePlatformConfirm.Id)}
+              className="min-h-[44px] w-full sm:w-auto order-1 sm:order-2"
             >
               Delete Platform
             </Button>

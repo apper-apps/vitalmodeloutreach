@@ -27,42 +27,36 @@ const ModelsTable = ({ models, onEdit, onDelete, onBlacklist, accounts = [], onF
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
-      <div className="overflow-x-auto">
-        <table className="min-w-full divide-y divide-gray-200">
+<div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+      <div className="overflow-x-auto -mx-4 sm:mx-0" style={{ WebkitOverflowScrolling: 'touch' }}>
+<table className="min-w-full divide-y divide-gray-200" style={{ minWidth: '800px' }}>
           <thead className="bg-gray-50">
             <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[200px]">
                 Link
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[120px]">
                 Date Added
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[100px]">
                 Platform
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[150px]">
                 Followed By
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[120px]">
                 Follow Date
               </th>
-<th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[80px]">
                 DM Sent
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[130px]">
                 DM Sent Date
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Actions
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                DM Date
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[150px]">
                 Notes
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[120px]">
                 Actions
               </th>
             </tr>
@@ -99,11 +93,11 @@ const ModelsTable = ({ models, onEdit, onDelete, onBlacklist, accounts = [], onF
                     {model.platform}
                   </span>
                 </td>
-<td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+<td className="px-3 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                   <Select
                     value={model.followedBy || ""}
                     onChange={(e) => onFollowedByChange && onFollowedByChange(model.Id, e.target.value)}
-                    className="min-w-[150px]"
+                    className="min-w-[150px] min-h-[40px] text-xs sm:text-sm"
                   >
                     <option value="">Select Account</option>
                     {accounts.map((account) => (
@@ -113,54 +107,57 @@ const ModelsTable = ({ models, onEdit, onDelete, onBlacklist, accounts = [], onF
                     ))}
                   </Select>
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                <td className="px-3 sm:px-6 py-4 whitespace-nowrap text-xs sm:text-sm text-gray-900">
                   {formatDate(model.followDate)}
                 </td>
-<td className="px-6 py-4 whitespace-nowrap">
+                <td className="px-3 sm:px-6 py-4 whitespace-nowrap">
                   <input
                     type="checkbox"
                     checked={model.dmSent || false}
                     onChange={(e) => onDMSentChange && onDMSentChange(model.Id, e.target.checked)}
-                    className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
+                    className="h-5 w-5 sm:h-4 sm:w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
                   />
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap">
+                <td className="px-3 sm:px-6 py-4 whitespace-nowrap">
                   <input
                     type="date"
                     value={model.dmSentDate ? new Date(model.dmSentDate).toISOString().split('T')[0] : ''}
                     onChange={(e) => onDMSentDateChange && onDMSentDateChange(model.Id, e.target.value)}
-                    className="text-sm border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500"
+                    className="text-xs sm:text-sm border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 min-h-[40px] w-full"
                   />
                 </td>
-                <td className="px-6 py-4 text-sm text-gray-900 max-w-[200px]">
+                <td className="px-3 sm:px-6 py-4 text-xs sm:text-sm text-gray-900 max-w-[150px] sm:max-w-[200px]">
                   <div className="truncate" title={model.notes}>
                     {model.notes || "-"}
                   </div>
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-<div className="flex space-x-2">
+<td className="px-3 sm:px-6 py-4 whitespace-nowrap text-sm font-medium">
+                  <div className="flex flex-col space-y-1 sm:space-y-0 sm:flex-row sm:space-x-1">
                     <Button
                       variant="ghost"
                       size="sm"
                       icon="Edit"
                       onClick={() => onEdit(model)}
-                      className="text-primary-600 hover:text-primary-700"
+                      className="text-primary-600 hover:text-primary-700 min-h-[36px] min-w-[36px] text-xs flex items-center justify-center"
+                      title="Edit"
                     />
                     <Button
                       variant="ghost"
                       size="sm"
                       icon="UserX"
                       onClick={() => onBlacklist(model.Id)}
-                      className="text-orange-600 hover:text-orange-700"
+                      className="text-orange-600 hover:text-orange-700 min-h-[36px] min-w-[36px] text-xs flex items-center justify-center"
+                      title="Blacklist"
                     />
                     <Button
                       variant="ghost"
                       size="sm"
                       icon="Trash2"
                       onClick={() => onDelete(model.Id)}
-                      className="text-red-600 hover:text-red-700"
+                      className="text-red-600 hover:text-red-700 min-h-[36px] min-w-[36px] text-xs flex items-center justify-center"
+                      title="Delete"
                     />
-</div>
+                  </div>
                 </td>
               </tr>
             );

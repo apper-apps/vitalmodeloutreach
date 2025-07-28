@@ -84,21 +84,21 @@ const handleMoveToMainList = async (id) => {
   if (error) return <Error message={error} onRetry={loadBlacklist} />;
 
   return (
-    <div className="space-y-6">
+<div className="space-y-4 md:space-y-6">
       <div>
-        <h2 className="text-2xl font-bold text-gray-900 mb-2">Blacklist</h2>
-        <p className="text-gray-600">Manage blocked or inappropriate models.</p>
+        <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-1 sm:mb-2">Blacklist</h2>
+        <p className="text-sm sm:text-base text-gray-600">Manage blocked or inappropriate models.</p>
       </div>
 
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
-        <div className="flex-1 max-w-md">
+<div className="flex flex-col space-y-3 sm:space-y-0 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex-1 sm:max-w-md">
           <SearchBar
             value={searchTerm}
             onChange={setSearchTerm}
             placeholder="Search blacklist..."
           />
         </div>
-        <div className="text-sm text-gray-500">
+        <div className="text-xs sm:text-sm text-gray-500 text-center sm:text-right">
           {filteredBlacklist.length} of {blacklist.length} blocked
         </div>
       </div>
@@ -118,8 +118,8 @@ const handleMoveToMainList = async (id) => {
           />
         )
       ) : (
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
-          <div className="overflow-x-auto">
+<div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+          <div className="overflow-x-auto -mx-4 sm:mx-0">
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
                 <tr>
@@ -166,25 +166,27 @@ const handleMoveToMainList = async (id) => {
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       {new Date(item.dateAdded).toLocaleDateString()}
                     </td>
-<td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                      <div className="flex space-x-2">
+<td className="px-4 sm:px-6 py-4 whitespace-nowrap text-sm font-medium">
+                      <div className="flex flex-col space-y-1 sm:space-y-0 sm:flex-row sm:space-x-2">
                         <Button
                           variant="ghost"
                           size="sm"
                           icon="RotateCcw"
                           onClick={() => handleMoveToMainList(item.Id)}
-                          className="text-green-600 hover:text-green-700"
+                          className="text-green-600 hover:text-green-700 text-xs sm:text-sm min-h-[36px] sm:min-h-[32px] w-full sm:w-auto justify-center sm:justify-start"
                         >
-                          Move to Main List
+                          <span className="sm:inline">Move to Main List</span>
+                          <span className="sm:hidden">Move to Main</span>
                         </Button>
                         <Button
                           variant="ghost"
                           size="sm"
                           icon="Trash2"
                           onClick={() => handleRemoveFromBlacklist(item.Id)}
-                          className="text-red-600 hover:text-red-700"
+                          className="text-red-600 hover:text-red-700 text-xs sm:text-sm min-h-[36px] sm:min-h-[32px] w-full sm:w-auto justify-center sm:justify-start"
                         >
-                          Delete Permanently
+                          <span className="sm:inline">Delete Permanently</span>
+                          <span className="sm:hidden">Delete</span>
                         </Button>
                       </div>
                     </td>

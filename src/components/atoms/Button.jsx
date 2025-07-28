@@ -21,10 +21,10 @@ const Button = forwardRef(({
     danger: "bg-red-600 hover:bg-red-700 text-white focus:ring-red-500 transform hover:scale-105"
   };
 
-  const sizes = {
-    sm: "px-3 py-1.5 text-sm rounded-md",
-    md: "px-4 py-2 text-sm rounded-lg",
-    lg: "px-6 py-3 text-base rounded-lg"
+const sizes = {
+    sm: "px-3 py-2 text-sm rounded-md min-h-[36px]",
+    md: "px-4 py-2.5 text-sm rounded-lg min-h-[44px]",
+    lg: "px-6 py-3 text-base rounded-lg min-h-[48px]"
   };
 
   return (

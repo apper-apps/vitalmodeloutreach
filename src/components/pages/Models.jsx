@@ -297,25 +297,27 @@ const handleEdit = (model) => {
   if (error) return <Error message={error} onRetry={loadModels} />;
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+<div className="space-y-4 md:space-y-6">
+<div className="flex flex-col space-y-4 sm:space-y-0 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Models</h2>
-          <p className="text-gray-600">Manage your model outreach database.</p>
+          <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-1 sm:mb-2">Models</h2>
+          <p className="text-sm sm:text-base text-gray-600">Manage your model outreach database.</p>
         </div>
-<div className="flex space-x-2">
+<div className="flex flex-col space-y-2 sm:space-y-0 sm:flex-row sm:space-x-2 w-full sm:w-auto">
           <Button
             icon="Plus"
             onClick={() => setShowAddModal(true)}
-            className="mt-4 sm:mt-0"
+            className="w-full sm:w-auto min-h-[44px] text-sm sm:text-base"
+            size="md"
           >
             Add Model
           </Button>
-<Button
+          <Button
             icon="Upload"
             variant="secondary"
             onClick={() => setShowBulkAddModal(true)}
-            className="mt-4 sm:mt-0"
+            className="w-full sm:w-auto min-h-[44px] text-sm sm:text-base"
+            size="md"
           >
             Import Models
           </Button>
@@ -323,8 +325,8 @@ const handleEdit = (model) => {
       </div>
 
       {/* Quick Filter Tabs */}
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-6">
-        <div className="flex flex-wrap gap-2">
+<div className="bg-white rounded-lg shadow-sm border border-gray-200 p-3 sm:p-4 mb-4 sm:mb-6">
+        <div className="grid grid-cols-2 sm:flex sm:flex-wrap gap-2">
           {[
             { key: 'all', label: 'All', count: models.length },
             { key: 'to-follow', label: 'To Follow', count: models.filter(m => !m.followedBy || m.followedBy.trim() === "").length },
@@ -334,27 +336,30 @@ const handleEdit = (model) => {
             <button
               key={filter.key}
               onClick={() => setActiveFilter(filter.key)}
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200 ${
+              className={`px-3 sm:px-4 py-2.5 sm:py-2 rounded-lg text-xs sm:text-sm font-medium transition-colors duration-200 min-h-[44px] flex items-center justify-center ${
                 activeFilter === filter.key
                   ? 'bg-primary-600 text-white shadow-sm'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200 active:bg-gray-300'
               }`}
             >
-              {filter.label} ({filter.count})
+              <span className="text-center leading-tight">
+                {filter.label}<br className="sm:hidden" />
+                <span className="sm:ml-1">({filter.count})</span>
+              </span>
             </button>
           ))}
         </div>
       </div>
 
-<div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
-        <div className="flex-1 max-w-md">
+<div className="flex flex-col space-y-3 sm:space-y-0 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex-1 sm:max-w-md">
           <SearchBar
             value={searchTerm}
             onChange={setSearchTerm}
             placeholder="Search models..."
           />
         </div>
-        <div className="text-sm text-gray-500">
+        <div className="text-xs sm:text-sm text-gray-500 text-center sm:text-right">
           {filteredModels.length} of {models.length} models
         </div>
       </div>
@@ -386,7 +391,8 @@ const handleEdit = (model) => {
           />
         )
       ) : (
-<ModelsTable
+<div className="overflow-hidden">
+        <ModelsTable
           models={filteredModels}
           onEdit={handleEdit}
           onDelete={handleDeleteModel}
@@ -396,6 +402,7 @@ const handleEdit = (model) => {
           onDMSentChange={handleDMSentChange}
           onDMSentDateChange={handleDMSentDateChange}
         />
+      </div>
       )}
 
 <Modal
